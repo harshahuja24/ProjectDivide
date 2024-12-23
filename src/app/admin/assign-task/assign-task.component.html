@@ -26,10 +26,55 @@
           </div>
         </div>
         <div class="card-body p-0">
-          <!-- Empty State -->
-          <div class="text-center py-5 text-muted">
-            <i class="bi bi-list-task display-1"></i>
-            <p class="mt-3">No tasks yet. Click "Assign New Task" to get started.</p>
+          <!-- Task Entries -->
+          <div class="row py-3 border-bottom mx-0 align-items-center">
+            <div class="col">Implement payment gateway</div>
+            <div class="col">E-commerce</div>
+            <div class="col">
+              <img src="assets/avatar-placeholder.png" class="rounded-circle me-2" width="24" height="24">
+              Sarah Smith
+            </div>
+            <div class="col">Dec 28, 2024</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-warning px-3 py-2">In Progress</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+    
+          <div class="row py-3 border-bottom mx-0 align-items-center">
+            <div class="col">Bug fixes for mobile app</div>
+            <div class="col">Mobile App</div>
+            <div class="col">
+              <img src="assets/avatar-placeholder.png" class="rounded-circle me-2" width="24" height="24">
+              Mike Johnson
+            </div>
+            <div class="col">Dec 30, 2024</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-success px-3 py-2">Completed</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+    
+          <div class="row py-3 border-bottom mx-0 align-items-center">
+            <div class="col">Design system documentation</div>
+            <div class="col">Design System</div>
+            <div class="col">
+              <img src="assets/avatar-placeholder.png" class="rounded-circle me-2" width="24" height="24">
+              Emma Wilson
+            </div>
+            <div class="col">Jan 5, 2025</div>
+            <div class="col">
+              &nbsp;
+              &nbsp;
+              <span class="badge rounded-pill bg-info px-3 py-2">To Do</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
           </div>
         </div>
       </div>
@@ -42,52 +87,67 @@
   <!-- Backdrop -->
   <div class="custom-backdrop"></div>
   
-  <!-- Modal -->
-  <div class="modal fade show d-block" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Assign New Task</h5>
-          <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label class="form-label">Task Name</label>
-              <input type="text" class="form-control" placeholder="Enter task name">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Project</label>
-              <select class="form-select">
-                <option selected disabled>Select project</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Assign To</label>
-              <select class="form-select">
-                <option selected disabled>Select employee</option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Due Date</label>
-              <input type="date" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Status</label>
-              <select class="form-select">
-                <option selected disabled>Select status</option>
-                <option value="todo">To Do</option>
-                <option value="inprogress">In Progress</option>
-                <option value="completed">Completed</option>
-              </select>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
-          <button type="button" class="btn btn-primary">Assign Task</button>
-        </div>
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Assign New Task</h5>
+        <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
       </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitTask()" [formGroup]="assignTaskForm">
+          <div class="row">
+            <!-- Left side - Form inputs -->
+            <div class="col-md-5 border-end">
+              <div class="mb-3">
+                <label class="form-label">Task Name</label>
+                <input type="text" class="form-control" placeholder="Enter task name" formControlName="taskName">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Project</label>
+                <select class="form-select" formControlName="taskProject">
+                  <option selected disabled>Select project</option>
+                  <option value="webdesign" >Web Design </option>
+                  <option  value="mobileComputing">Mobile Computing </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Assign To</label>
+                <select class="form-select" formControlName="taskAssignedTo">
+                  <option selected disabled>Select employee</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Due Date</label>
+                <input type="date" class="form-control" formControlName="taskDeadline">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" formControlName="taskStatus">
+                  <option selected disabled>Select status</option>
+                  <option value="todo">To Do</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Right side - Rich text editor -->
+            <div class="col-md-7">
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <angular-editor formControlName="taskDescription" [config]="config" ></angular-editor>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">Assign Task</button>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
+</div>
 </div>

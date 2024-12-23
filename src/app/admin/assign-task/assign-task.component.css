@@ -39,6 +39,53 @@
 }
 
 .modal-dialog {
-  max-width: 500px;
-  margin: 1.75rem auto;
+  margin: 1.75rem 2rem;
+}
+
+.modal-xl {
+  max-width: 95%;
+  height: 90vh;
+}
+
+.modal-content {
+  height: 90%;
+}
+
+.modal-body {
+  height: calc(100% - 120px); /* Adjust for header and footer */
+  overflow-y: auto;
+}
+
+/* Angular Editor Container */
+.angular-editor {
+  height: calc(100% - 30px); /* Adjust for label */
+}
+.badge {
+  font-weight: 500;
+  font-size: 0.85rem;
+}
+
+.badge.bg-danger {
+  background-color: #FF5630 !important;
+}
+
+.badge.bg-warning {
+  background-color: #FFAB00 !important;
+}
+
+.badge.bg-success {
+  background-color: #36B37E !important;
+}
+
+.badge.bg-info {
+  background-color: #0052CC !important;
+  color: white;
+}
+
+.card-body .row:hover {
+  background-color: #f8f9fa;
+}
+
+.text-danger {
+  color: #FF5630 !important;
 }
