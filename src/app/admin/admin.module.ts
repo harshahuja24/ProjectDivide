@@ -7,6 +7,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEmployeeComponent } from './create-employee/create-employee.component';
 import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -20,7 +21,9 @@ import { BrowserModule } from '@angular/platform-browser';
   imports: [
     CommonModule,
     BrowserModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule
   ],
   exports:[
     CreateProjectComponent,

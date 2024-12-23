@@ -25,9 +25,21 @@
           </div>
           <div class="card-body p-0">
             <!-- Empty State -->
-            <div class="text-center py-5 text-muted">
+            <div class=" py-5 text-muted">
               <i class="bi bi-folder-plus display-1"></i>
-              <p class="mt-3">No projects yet. Click "Create New Project" to get started.</p>
+              <!-- <p class="mt-3">No projects yet. Click "Create New Project" to get started.</p> -->
+               <div class="row">
+                <div class="col"><p >Make dashboard</p></div>
+                  <div class="col">
+                    <p >Antonio</p>
+                  </div>
+                  <div class="col">
+                  <p >October 23rd, 2024</p>
+                  </div>
+                  <div class="col">
+                  <p >In Progress</p>
+                  </div>
+               </div>
             </div>
           </div>
         </div>
@@ -49,29 +61,29 @@
             <button type="button" class="btn-close" (click)="isModalOpen = false"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form [formGroup] = "projectRegistration" (ngSubmit)="projectSubmit()">
               <div class="mb-3">
                 <label class="form-label">Project Title</label>
-                <input type="text" class="form-control" placeholder="Enter project title">
+                <input type="text" class="form-control" formControlName="ptitle" placeholder="Enter project title">
               </div>
               <div class="mb-3">
                 <label class="form-label">Team Members</label>
-                <input type="text" class="form-control" placeholder="Add team members">
+                <input type="text" class="form-control" formControlName="teammember" placeholder="Add team members">
                 <div class="form-text">Separate multiple members with commas</div>
               </div>
               <div class="mb-3">
                 <label class="form-label">Due Date</label>
-                <input type="date" class="form-control">
+                <input type="date" formControlName="duedate" class="form-control">
               </div>
               <div class="mb-3">
                 <label class="form-label">Description</label>
-                <textarea class="form-control" rows="3" placeholder="Project description"></textarea>
+                <textarea class="form-control" rows="3" formControlName="pdesc" placeholder="Project description"></textarea>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Project</button>
               </div>
             </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="isModalOpen = false">Cancel</button>
-            <button type="button" class="btn btn-primary">Create Project</button>
           </div>
         </div>
       </div>
