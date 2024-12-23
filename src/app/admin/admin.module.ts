@@ -9,6 +9,7 @@ import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular
 import { BrowserModule } from '@angular/platform-browser';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 
 
@@ -25,7 +26,8 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,
     ReactiveFormsModule,
     AngularEditorModule,
-    HttpClientModule
+    HttpClientModule,
+    RouterModule
   ],
   exports:[
     CreateProjectComponent,
