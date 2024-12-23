@@ -1,0 +1,107 @@
+<div class="container-fluid py-4 position-relative">
+    <!-- Header Row -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Employee List</h2>
+          <button class="btn btn-primary" (click)="isEmployeeModalOpen = true">
+            <i class="bi bi-plus-lg me-2"></i>Add Employee
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Employee List -->
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header bg-white py-3">
+            <div class="row align-items-center">
+              <div class="col"><strong>Name</strong></div>
+              <div class="col"><strong>Email</strong></div>
+              <div class="col"><strong>Phone</strong></div>
+              <div class="col"><strong>Address</strong></div>
+              <div class="col"><strong>Admin</strong></div>
+              <div class="col"><strong>Actions</strong></div>
+            </div>
+          </div>
+          <div class="card-body p-0">
+            <!-- Employee List -->
+            <ng-container *ngIf="employees.length > 0; else emptyState">
+              <div class="row py-3 border-bottom mx-0" *ngFor="let employee of employees">
+                <div class="col">{{ employee.name }}</div>
+                <div class="col">{{ employee.email }}</div>
+                <div class="col">{{ employee.phone }}</div>
+                <div class="col">{{ employee.address }}</div>
+                <div class="col">
+                  <span class="badge" [ngClass]="{'bg-success': employee.isAdmin, 'bg-secondary': !employee.isAdmin}">
+                    {{ employee.isAdmin ? 'Yes' : 'No' }}
+                  </span>
+                </div>
+                <div class="col">
+                  <button class="btn btn-sm btn-outline-danger" (click)="removeEmployee(employee.id)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+              </div>
+            </ng-container>
+            
+            <!-- Empty State -->
+            <ng-template #emptyState>
+              <div class="text-center py-5 text-muted">
+                <i class="bi bi-person-plus display-1"></i>
+                <p class="mt-3">No employees yet. Click "Add Employee" to get started.</p>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Modal Container -->
+  <div class="modal-container" [class.show]="isEmployeeModalOpen">
+    <!-- Backdrop -->
+    <div class="custom-backdrop"></div>
+  
+    <!-- Modal -->
+    <div class="modal fade show d-block" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add New Employee</h5>
+            <button type="button" class="btn-close" (click)="isEmployeeModalOpen = false"></button>
+          </div>
+          <div class="modal-body">
+            <form #employeeForm="ngForm" (ngSubmit)="addEmployee()">
+              <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" [(ngModel)]="newEmployee.name" name="name" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" [(ngModel)]="newEmployee.email" name="email" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Phone</label>
+                <input type="text" class="form-control" [(ngModel)]="newEmployee.phone" name="phone">
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Address</label>
+                <textarea class="form-control" [(ngModel)]="newEmployee.address" name="address" rows="2"></textarea>
+              </div>
+              <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox" [(ngModel)]="newEmployee.isAdmin" name="isAdmin" id="isAdmin">
+                <label class="form-check-label" for="isAdmin">Set as Admin</label>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="isEmployeeModalOpen = false">Cancel</button>
+            <button type="submit" class="btn btn-primary" (click)="addEmployee()">Add Employee</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

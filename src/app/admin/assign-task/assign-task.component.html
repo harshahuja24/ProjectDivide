@@ -1,0 +1,73 @@
+
+
+<div class="container">
+  <!-- Header with New Button -->
+  <div class="header">
+    <h2>Tasks</h2>
+    <button class="btn-new" (click)="addNewTask()">
+      <i class="fas fa-plus"></i>
+      New
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters">
+    <select class="filter-select">
+      <option>All statuses</option>
+    </select>
+    <select class="filter-select">
+      <option>All assignees</option>
+    </select>
+    <select class="filter-select">
+      <option>Due date</option>
+    </select>
+  </div>
+
+  <!-- Task Table -->
+  <div class="card">
+    <table class="task-table">
+      <thead>
+        <tr>
+          <th class="checkbox-col">
+            <input type="checkbox">
+          </th>
+          <th>Task Name</th>
+          <th>Project</th>
+          <th>Assignee</th>
+          <th>Due Date</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let task of tasks">
+          <td class="checkbox-col">
+            <input type="checkbox">
+          </td>
+          <td>{{ task.name }}</td>
+          <td>
+            <div class="project">
+              <span class="project-icon">M</span>
+              {{ task.project }}
+            </div>
+          </td>
+          <td>
+            <div class="assignee">
+              <span class="avatar">{{ task.assignee[0] }}</span>
+              {{ task.assignee }}
+            </div>
+          </td>
+          <td class="due-date">{{ task.dueDate }}</td>
+          <td>
+            <span [class]="'status-badge ' + getStatusColor(task.status)">
+              {{ task.status }}
+            </span>
+          </td>
+          <td>
+            <button class="btn-more">⋯</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
