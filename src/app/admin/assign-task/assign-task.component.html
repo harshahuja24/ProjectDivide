@@ -1,73 +1,93 @@
-
-
-<div class="container">
-  <!-- Header with New Button -->
-  <div class="header">
-    <h2>Tasks</h2>
-    <button class="btn-new" (click)="addNewTask()">
-      <i class="fas fa-plus"></i>
-      New
-    </button>
+<div class="container-fluid py-4 position-relative">
+  <!-- Header Row -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center">
+        <h2>Task List</h2>
+        <button class="btn btn-primary" (click)="isTaskModalOpen = true">
+          <i class="bi bi-plus-lg me-2"></i>Assign New Task
+        </button>
+      </div>
+    </div>
   </div>
 
-  <!-- Filters -->
-  <div class="filters">
-    <select class="filter-select">
-      <option>All statuses</option>
-    </select>
-    <select class="filter-select">
-      <option>All assignees</option>
-    </select>
-    <select class="filter-select">
-      <option>Due date</option>
-    </select>
+  <!-- Task List -->
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-white py-3">
+          <div class="row align-items-center">
+            <div class="col"><strong>Task Name</strong></div>
+            <div class="col"><strong>Project</strong></div>
+            <div class="col"><strong>Assigned To</strong></div>
+            <div class="col"><strong>Due Date</strong></div>
+            <div class="col"><strong>Status</strong></div>
+            <div class="col"><strong>Actions</strong></div>
+          </div>
+        </div>
+        <div class="card-body p-0">
+          <!-- Empty State -->
+          <div class="text-center py-5 text-muted">
+            <i class="bi bi-list-task display-1"></i>
+            <p class="mt-3">No tasks yet. Click "Assign New Task" to get started.</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+</div>
 
-  <!-- Task Table -->
-  <div class="card">
-    <table class="task-table">
-      <thead>
-        <tr>
-          <th class="checkbox-col">
-            <input type="checkbox">
-          </th>
-          <th>Task Name</th>
-          <th>Project</th>
-          <th>Assignee</th>
-          <th>Due Date</th>
-          <th>Status</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let task of tasks">
-          <td class="checkbox-col">
-            <input type="checkbox">
-          </td>
-          <td>{{ task.name }}</td>
-          <td>
-            <div class="project">
-              <span class="project-icon">M</span>
-              {{ task.project }}
+<!-- Modal Container -->
+<div class="modal-container" [class.show]="isTaskModalOpen">
+  <!-- Backdrop -->
+  <div class="custom-backdrop"></div>
+  
+  <!-- Modal -->
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign New Task</h5>
+          <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Task Name</label>
+              <input type="text" class="form-control" placeholder="Enter task name">
             </div>
-          </td>
-          <td>
-            <div class="assignee">
-              <span class="avatar">{{ task.assignee[0] }}</span>
-              {{ task.assignee }}
+            <div class="mb-3">
+              <label class="form-label">Project</label>
+              <select class="form-select">
+                <option selected disabled>Select project</option>
+              </select>
             </div>
-          </td>
-          <td class="due-date">{{ task.dueDate }}</td>
-          <td>
-            <span [class]="'status-badge ' + getStatusColor(task.status)">
-              {{ task.status }}
-            </span>
-          </td>
-          <td>
-            <button class="btn-more">⋯</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+            <div class="mb-3">
+              <label class="form-label">Assign To</label>
+              <select class="form-select">
+                <option selected disabled>Select employee</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Due Date</label>
+              <input type="date" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Status</label>
+              <select class="form-select">
+                <option selected disabled>Select status</option>
+                <option value="todo">To Do</option>
+                <option value="inprogress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+          <button type="button" class="btn btn-primary">Assign Task</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

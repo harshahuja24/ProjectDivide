@@ -24,8 +24,9 @@ import { BrowserModule } from '@angular/platform-browser';
   ],
   exports:[
     CreateProjectComponent,
-    CreateEmployeeComponent
-  ]
+    CreateEmployeeComponent,
+    AssignTaskComponent,
+   ]
 })
 export class AdminModule {
   
