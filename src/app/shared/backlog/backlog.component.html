@@ -1,0 +1,83 @@
+<!-- backlog.component.html -->
+<div class="backlog-container">
+    <!-- Header -->
+    <div class="header-section">
+      <h1>Backlog</h1>
+      <div class="header-actions">
+        <div class="search-box">
+          <input type="text" placeholder="Search" class="form-control">
+        </div>
+      </div>
+    </div>
+  
+    <!-- Active Sprint Section -->
+    <div class="card shadow-sm mb-4">
+      <div class="card-header bg-white py-3">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">
+              {{ activeSprint.name }}
+              <small class="text-muted">{{ activeSprint.dateRange }} ({{ activeSprint.issues }})</small>
+            </h5>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-primary" (click)="startSprint()">Start sprint</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card-body p-0">
+        <div *ngFor="let task of activeSprintTasks" class="row py-3 border-bottom mx-0 align-items-center employee-row">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <div class="task-title">{{ task.id }} {{ task.title }}</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span [class]="'badge rounded-pill px-3 py-2 ' + (task.status === 'IN PROGRESS' ? 'bg-warning' : 'bg-primary')">
+              {{ task.status }}
+            </span>
+          </div>
+          <div class="col-auto">
+            <div class="avatar" [attr.data-initials]="task.assignee"></div>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Backlog Section -->
+    <div class="card shadow-sm">
+      <div class="card-header bg-white py-3">
+        <div class="row align-items-center">
+          <div class="col">
+            <h5 class="mb-0">Backlog (2 issues)</h5>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-primary" (click)="createSprint()">Create sprint</button>
+          </div>
+        </div>
+      </div>
+  
+      <div class="card-body p-0">
+        <div *ngFor="let task of backlogTasks" class="row py-3 border-bottom mx-0 align-items-center employee-row">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <div class="task-title">{{ task.id }} {{ task.title }}</div>
+            </div>
+          </div>
+          <div class="col-auto">
+            <span class="badge rounded-pill bg-secondary px-3 py-2">{{ task.status }}</span>
+          </div>
+          <div class="col-auto">
+            <div class="avatar" [attr.data-initials]="task.assignee"></div>
+          </div>
+          <div class="col-auto">
+            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

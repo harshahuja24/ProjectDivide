@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-assign-task',
-  templateUrl: './assign-task.component.html',
-  styleUrls: ['./assign-task.component.css']
+  selector: 'app-create-task',
+  templateUrl: './create-task.component.html',
+  styleUrls: ['./create-task.component.css']
 })
-export class AssignTaskComponent {
+export class CreateTaskComponent {
   
   isTaskModalOpen = false;
 
-  assignTaskForm = new FormGroup({
+  createTaskForm = new FormGroup({
     taskName: new FormControl('',[Validators.required]),
     taskProject: new FormControl('',[Validators.required]),
     taskDescription: new FormControl('',[Validators.required]),
@@ -39,6 +39,6 @@ export class AssignTaskComponent {
   };
 
   submitTask(){
-    console.log(this.assignTaskForm.value);
+    console.log(this.createTaskForm.value);
   }
 }

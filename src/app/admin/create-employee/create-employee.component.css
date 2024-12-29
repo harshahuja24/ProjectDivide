@@ -42,3 +42,17 @@
     max-width: 500px;
     margin: 1.75rem auto;
   }
+
+  .employee-row:hover {
+    background-color: #f8f9fa;
+  }
+  .card {
+    border-radius: 8px;
+  }
+  .btn-outline-danger {
+    transition: background-color 0.3s, color 0.3s;
+  }
+  .btn-outline-danger:hover {
+    background-color: #dc3545;
+    color: #fff;
+  }

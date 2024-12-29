@@ -1,0 +1,140 @@
+/* backlog.component.scss */
+.backlog-container {
+    padding: 20px;
+    background: #f4f5f7;
+    min-height: 100vh;
+  }
+  
+  .header-section {
+    margin-bottom: 24px;
+  
+    .breadcrumb {
+      color: #6b778c;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+  
+    h1 {
+      font-size: 24px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+  
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+  }
+  
+  .search-box {
+    width: 240px;
+  
+    input {
+      border-radius: 0.5rem;
+      border: 1px solid #dfe1e6;
+      padding: 8px 12px;
+    }
+  }
+  
+  .card {
+    border: none;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 16px;
+  
+    .card-header {
+      background: white;
+      border-bottom: 1px solid #dee2e6;
+    }
+  }
+  
+  .task-title {
+    color: #172b4d;
+    font-weight: 500;
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0052cc;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+  
+    &::before {
+      content: attr(data-initials);
+    }
+  }
+  
+  .badge {
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 12px;
+  
+    &.bg-warning {
+      background: #ffab00;
+      color: #172b4d;
+    }
+  }
+  
+  .btn-primary {
+    background: #0052cc;
+    border-color: #0052cc;
+    
+    &:hover {
+      background: #0747a6;
+    }
+  }
+  
+  .btn-outline-danger {
+    padding: 4px 8px;
+    transition: background-color 0.3s, color 0.3s;
+    
+    &:hover {
+      background-color: #dc3545;
+      color: #fff;
+    }
+  }
+  
+  .employee-row {
+    &:hover {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  .modal-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none;
+    z-index: 1050;
+  
+    &.show {
+      display: block;
+    }
+  }
+  
+  .custom-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040;
+  }
+  
+  .modal {
+    z-index: 1060;
+  }
+  
+  .modal-dialog {
+    max-width: 500px;
+    margin: 1.75rem auto;
+  }

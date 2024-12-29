@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CreateProjectComponent } from './create-project/create-project.component';
-import { AssignTaskComponent } from './assign-task/assign-task.component';
+import { CreateTaskComponent } from './create-task/create-task.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateEmployeeComponent } from './create-employee/create-employee.component';
@@ -16,9 +16,9 @@ import { RouterModule } from '@angular/router';
 @NgModule({
   declarations: [
     CreateProjectComponent,
-    AssignTaskComponent,
+    CreateTaskComponent,
     AdminDashboardComponent,
-    CreateEmployeeComponent
+    CreateEmployeeComponent,
   ],
   imports: [
     CommonModule,
@@ -32,7 +32,7 @@ import { RouterModule } from '@angular/router';
   exports:[
     CreateProjectComponent,
     CreateEmployeeComponent,
-    AssignTaskComponent,
+    CreateTaskComponent,
    ]
 })
 export class AdminModule {

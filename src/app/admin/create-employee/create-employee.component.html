@@ -5,16 +5,15 @@
       <div class="d-flex justify-content-between align-items-center">
         <h2>Employee List</h2>
         <button class="btn btn-primary" (click)="isEmployeeModalOpen = true">
-          <i class="bi bi-plus-lg me-2"></i>Add Employee
+          <i class="fa-solid fa-plus"></i>&nbsp;  Add Employee
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Employee List -->
   <div class="row">
     <div class="col-12">
-      <div class="card">
+      <div class="card shadow-sm">
         <div class="card-header bg-white py-3">
           <div class="row align-items-center">
             <div class="col"><strong>Name</strong></div>
@@ -26,15 +25,65 @@
           </div>
         </div>
         <div class="card-body p-0">
-          <!-- Empty State -->
-          <div class="text-center py-5 text-muted">
-            <i class="bi bi-person-plus display-1"></i>
-            <!-- <p class="mt-3">No employees yet. Click "Add Employee" to get started.</p> -->
+          <!-- Employee Entries -->
+          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
+            <div class="col">John Doe</div>
+            <div class="col">john.doe@example.com</div>
+            <div class="col">123-456-7890</div>
+            <div class="col">123 Main St, Anytown, USA</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
           </div>
+
+          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
+            <div class="col">John Doe</div>
+            <div class="col">john.doe@example.com</div>
+            <div class="col">123-456-7890</div>
+            <div class="col">123 Main St, Anytown, USA</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+
+          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
+            <div class="col">John Doe</div>
+            <div class="col">john.doe@example.com</div>
+            <div class="col">123-456-7890</div>
+            <div class="col">123 Main St, Anytown, USA</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+
+          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
+            <div class="col">John Doe</div>
+            <div class="col">john.doe@example.com</div>
+            <div class="col">123-456-7890</div>
+            <div class="col">123 Main St, Anytown, USA</div>
+            <div class="col">
+              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
+            </div>
+            <div class="col">
+              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+
+
         </div>
       </div>
     </div>
   </div>
+  
 </div>
 
 <!-- Modal Container -->

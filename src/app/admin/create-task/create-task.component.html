@@ -3,9 +3,9 @@
   <div class="row mb-4">
     <div class="col-12">
       <div class="d-flex justify-content-between align-items-center">
-        <h2>Task List</h2>
+        <h2>Create Task List</h2>
         <button class="btn btn-primary" (click)="isTaskModalOpen = true">
-          <i class="bi bi-plus-lg me-2"></i>Assign New Task
+          <i class="fa-solid fa-plus"></i> &ThinSpace;  Create New Task
         </button>
       </div>
     </div>
@@ -96,7 +96,7 @@
         <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
       </div>
       <div class="modal-body">
-        <form (ngSubmit)="submitTask()" [formGroup]="assignTaskForm">
+        <form (ngSubmit)="submitTask()" [formGroup]="createTaskForm">
           <div class="row">
             <!-- Left side - Form inputs -->
             <div class="col-md-5 border-end">
@@ -113,7 +113,7 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label class="form-label">Assign To</label>
+                <label class="form-label">Create To</label>
                 <select class="form-select" formControlName="taskAssignedTo">
                   <option selected disabled>Select employee</option>
                 </select>
@@ -142,7 +142,7 @@
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
-            <button type="submit" class="btn btn-primary">Assign Task</button>
+            <button type="submit" class="btn btn-primary">Create Task</button>
           </div>
         </form>
       </div>
