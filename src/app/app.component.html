@@ -2,4 +2,12 @@
  <!-- <app-create-employee></app-create-employee> -->
   <!-- <app-create-task></app-create-task> -->
    <!-- <app-backlog></app-backlog> -->
-    <router-outlet></router-outlet>
+    <div class="row " style="height: 100vh;">
+        <app-side-panel class="col-2">
+        </app-side-panel>
+        <div class="col-10">
+            <router-outlet ></router-outlet>
+        </div>
+        
+    
+    </div>

@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./side-panel.component.css']
 })
 export class SidePanelComponent {
+  isCollapsed = false;
 
+  toggleCollapse() {
+    this.isCollapsed = !this.isCollapsed;
+  }
 }

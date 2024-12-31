@@ -1,1 +1,69 @@
-<p>side-panel works!</p>
+<div class="side-panel" [class.collapsed]="isCollapsed">
+    <div class="project-header">
+      <div class="project-icon">
+        <img src="assets/project-icon.png" alt="Project">
+      </div>
+      <div class="project-info" *ngIf="!isCollapsed">
+        <h2>Project Name</h2>
+        <span>Software Project</span>
+      </div>
+      <button class="collapse-btn" (click)="toggleCollapse()">
+        <i class="fas" [class.fa-chevron-left]="!isCollapsed" [class.fa-chevron-right]="isCollapsed"></i>
+      </button>
+    </div>
+
+    <div class="nav-sections">
+      <!-- Planning Section -->
+      <div class="nav-section">
+        <div class="section-header">PLANNING</div>
+        <nav>
+          <a  routerLinkActive="active">
+            <i class="fas fa-home"></i>
+            <span *ngIf="!isCollapsed">Overview</span>
+          </a>
+          <a  routerLinkActive="active">
+            <i class="fas fa-users"></i>
+            <span *ngIf="!isCollapsed">Employee Management</span>
+          </a>
+          <a  routerLinkActive="active">
+            <i class="fas fa-project-diagram"></i>
+            <span *ngIf="!isCollapsed">Projects</span>
+          </a>
+          <a  routerLinkActive="active">
+            <i class="fas fa-tasks"></i>
+            <span *ngIf="!isCollapsed">Task Management</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Development Section -->
+      <div class="nav-section">
+        <div class="section-header">DEVELOPMENT</div>
+        <nav>
+          <a  routerLinkActive="active">
+            <i class="fas fa-list"></i>
+            <span *ngIf="!isCollapsed">Backlog</span>
+          </a>
+          <a  routerLinkActive="active">
+            <i class="fas fa-columns"></i>
+            <span *ngIf="!isCollapsed">Kanban Board</span>
+          </a>
+          <a  routerLinkActive="active">
+            <i class="fas fa-user-check"></i>
+            <span *ngIf="!isCollapsed">My Tasks</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Reports Section -->
+      <div class="nav-section">
+        <div class="section-header">REPORTS</div>
+        <nav>
+          <a routerLinkActive="active">
+            <i class="fas fa-chart-line"></i>
+            <span *ngIf="!isCollapsed">Logs & Reports</span>
+          </a>
+        </nav>
+      </div>
+    </div>
+  </div>
