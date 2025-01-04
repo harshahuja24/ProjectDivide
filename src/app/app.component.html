@@ -2,12 +2,13 @@
  <!-- <app-create-employee></app-create-employee> -->
   <!-- <app-create-task></app-create-task> -->
    <!-- <app-backlog></app-backlog> -->
-    <div class="row m-0" style="height: 100vh;">
-        <app-side-panel class="col-2">
-        </app-side-panel>
-        <div class="col-10">
-            <router-outlet ></router-outlet>
-        </div>
-        
-    
+   <div class="row m-0" style=" border: 2px solid red;" >
+    <div class=" sidebar-parent col-2" style="border: 2px solid blue; ">
+        <app-side-panel class="side-bar"> </app-side-panel>
     </div>
+    <div class="col-10" style="border: 2px solid green;">
+        <router-outlet ></router-outlet>
+    </div>
+    
+
+</div>
