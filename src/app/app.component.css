@@ -1,6 +1,12 @@
+
 .sidebar-parent{
     position: relative;
 }
 .side-bar{
-    position:fixed;
+    position:sticky;
+    top: 15px;
+}
+.router{
+    width: 80%;
+    padding: 0;
 }

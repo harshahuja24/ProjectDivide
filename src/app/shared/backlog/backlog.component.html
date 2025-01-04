@@ -21,7 +21,7 @@
             </h5>
           </div>
           <div class="col-auto">
-            <button class="btn btn-primary" (click)="startSprint()">Start sprint</button>
+            <button class="btn btn-primary" (click)="startSprint()" >Start sprint</button>
           </div>
         </div>
       </div>
@@ -56,7 +56,7 @@
             <h5 class="mb-0">Backlog (2 issues)</h5>
           </div>
           <div class="col-auto">
-            <button class="btn btn-primary" (click)="createSprint()">Create sprint</button>
+            <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">Create sprint</button>
           </div>
         </div>
       </div>
@@ -81,3 +81,61 @@
       </div>
     </div>
   </div>
+
+  
+<!-- Modal Container -->
+<div class="modal-container" [class.show]="isTaskModalOpen">
+  <!-- Backdrop -->
+  <div class="custom-backdrop"></div>
+  
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Create New Sprint</h5>
+        <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+      </div>
+      <div class="modal-body">
+        <form >
+          <div class="row">
+            <!-- Left side - Form inputs -->
+            <div class="col-md-5 border-end">
+              <div class="mb-3">
+                <label class="form-label">Sprint Title </label>
+                <input type="text" class="form-control" placeholder="Enter Sprint Title" >
+              </div>
+          
+              <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control">
+              </div>
+
+              
+              <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-control">
+              </div>
+
+            </div>
+            
+            <!-- Right side - Rich text editor -->
+            <div class="col-md-7">
+              <div class="mb-3">
+                <label class="form-label">Sprint Description</label>
+                <angular-editor formControlName="taskDescription" [config]="config" ></angular-editor>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Sprint</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
