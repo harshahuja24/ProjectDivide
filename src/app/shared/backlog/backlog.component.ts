@@ -18,6 +18,9 @@ interface Task {
   styleUrls: ['./backlog.component.css']
 })
 export class BacklogComponent {
+
+  isTaskModalOpen=false;
+
   activeSprint = {
     name: 'SCRUM Sprint 2',
     dateRange: '5 Dec - 12 Dec',
@@ -70,6 +73,26 @@ export class BacklogComponent {
       type: 'task'
     }
   ];
+
+  
+  config = {
+    editable: true,
+    spellcheck: true,
+    height: '15rem',
+    minHeight: '5rem',
+    placeholder: 'Enter quest description here...',
+    translate: 'no',
+    defaultParagraphSeparator: 'p',
+    defaultFontName: 'Arial',
+    toolbarHiddenButtons: [
+      ['bold']
+    ],
+    customClasses: [
+      { name: "quote", class: "quote" },
+      { name: 'redText', class: 'redText' },
+      { name: "titleText", class: "titleText", tag: "h1" }
+    ]
+  };
 
   createSprint() {
     // Sprint creation logic

@@ -3,6 +3,9 @@ import { CommonModule } from '@angular/common';
 import { SidePanelComponent } from './side-panel/side-panel/side-panel.component';
 import { BacklogComponent } from './backlog/backlog.component';
 import { ViewAllKanbanComponent } from './view-all-kanban/view-all-kanban.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 
 
@@ -10,10 +13,13 @@ import { ViewAllKanbanComponent } from './view-all-kanban/view-all-kanban.compon
   declarations: [
     SidePanelComponent,
     BacklogComponent,
-    ViewAllKanbanComponent
+    ViewAllKanbanComponent,
+    DashboardComponent
   ],
   imports: [
-    CommonModule
+    CommonModule,
+    HttpClientModule,
+    AngularEditorModule
   ],
   exports:[
     SidePanelComponent,

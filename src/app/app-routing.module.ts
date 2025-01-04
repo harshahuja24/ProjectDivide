@@ -5,6 +5,9 @@ import { CreateTaskComponent } from './admin/create-task/create-task.component';
 import { CreateProjectComponent } from './admin/create-project/create-project.component';
 import { ViewAllKanbanComponent } from './shared/view-all-kanban/view-all-kanban.component';
 import { KanbanComponent } from './employee/kanban-component/kanban-component.component';
+import { BacklogComponent } from './shared/backlog/backlog.component';
+import { LoginComponent } from './auth/login/login.component';
+import { DashboardComponent } from './shared/dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -26,6 +29,22 @@ const routes: Routes = [
   {
     path:"my-kanban",
     component:KanbanComponent
+  },
+  {
+    path:"backlog",
+    component:BacklogComponent
+  },
+  {
+    path:"login",
+    component:LoginComponent
+  },
+  {
+    path:"",
+    component:DashboardComponent
+  },
+  {
+    path:"dashboard",
+    component:DashboardComponent
   }
 ];
 
