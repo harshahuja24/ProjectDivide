@@ -21,6 +21,8 @@ export class BacklogComponent {
 
   isTaskModalOpen=false;
 
+  // constructor(private ){}
+
   activeSprint = {
     name: 'SCRUM Sprint 2',
     dateRange: '5 Dec - 12 Dec',
@@ -28,51 +30,51 @@ export class BacklogComponent {
     estimate: 10
   };
 
-  activeSprintTasks: Task[] = [
-    {
-      id: 'SCRUM-1',
-      title: 'Gather Changes and Updates',
-      status: 'IN PROGRESS',
-      assignee: 'HA',
-      assigneeAvatar: 'assets/avatar-1.png',
-      priority: 'High',
-      estimate: 10,
-      type: 'task'
-    },
-    {
-      id: 'SCRUM-3',
-      title: 'how to center a div',
-      status: 'TO DO',
-      assignee: 'SG',
-      assigneeAvatar: 'assets/avatar-2.png',
-      priority: 'Medium',
-      estimate: 10,
-      type: 'bug'
-    }
-  ];
+  // activeSprintTasks: Task[] = [
+  //   {
+  //     id: 'SCRUM-1',
+  //     title: 'Gather Changes and Updates',
+  //     status: 'IN PROGRESS',
+  //     assignee: 'HA',
+  //     assigneeAvatar: 'assets/avatar-1.png',
+  //     priority: 'High',
+  //     estimate: 10,
+  //     type: 'task'
+  //   },
+  //   {
+  //     id: 'SCRUM-3',
+  //     title: 'how to center a div',
+  //     status: 'TO DO',
+  //     assignee: 'SG',
+  //     assigneeAvatar: 'assets/avatar-2.png',
+  //     priority: 'Medium',
+  //     estimate: 10,
+  //     type: 'bug'
+  //   }
+  // ];
 
-  backlogTasks: Task[] = [
-    {
-      id: 'SCRUM-2',
-      title: 'Changes and Updates',
-      status: 'TO DO',
-      assignee: 'SG',
-      assigneeAvatar: 'assets/avatar-3.png',
-      priority: 'Low',
-      estimate: 5,
-      type: 'story'
-    },
-    {
-      id: 'SCRUM-5',
-      title: 'figma',
-      status: 'TO DO',
-      assignee: 'HA',
-      assigneeAvatar: 'assets/avatar-placeholder.png',
-      priority: 'Medium',
-      estimate: 5,
-      type: 'task'
-    }
-  ];
+  // backlogTasks: Task[] = [
+  //   {
+  //     id: 'SCRUM-2',
+  //     title: 'Changes and Updates',
+  //     status: 'TO DO',
+  //     assignee: 'SG',
+  //     assigneeAvatar: 'assets/avatar-3.png',
+  //     priority: 'Low',
+  //     estimate: 5,
+  //     type: 'story'
+  //   },
+  //   {
+  //     id: 'SCRUM-5',
+  //     title: 'figma',
+  //     status: 'TO DO',
+  //     assignee: 'HA',
+  //     assigneeAvatar: 'assets/avatar-placeholder.png',
+  //     priority: 'Medium',
+  //     estimate: 5,
+  //     type: 'task'
+  //   }
+  // ];
 
   
   config = {
@@ -101,4 +103,7 @@ export class BacklogComponent {
   startSprint() {
     // Sprint start logic
   }
+
+  getAllBacklogTasks() {
+    
 }
