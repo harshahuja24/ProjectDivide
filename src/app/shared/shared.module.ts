@@ -6,7 +6,7 @@ import { ViewAllKanbanComponent } from './view-all-kanban/view-all-kanban.compon
 import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { DashboardComponent } from './dashboard/dashboard.component';
-
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -19,7 +19,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   imports: [
     CommonModule,
     HttpClientModule,
-    AngularEditorModule
+    AngularEditorModule,
+    ReactiveFormsModule
   ],
   exports:[
     SidePanelComponent,

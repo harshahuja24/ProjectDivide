@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { SprintService } from '../services/sprint.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 interface Task {
   id: string;
@@ -24,6 +26,13 @@ export class BacklogComponent {
   isTaskModalOpen=false;
 
   constructor(private employeeService:EmployeeService, private sprintService:SprintService ){}
+
+  sprintForm=new FormGroup({ 
+    sprintTitle:new FormControl(''),
+    startDate:new FormControl(''),
+    endDate:new FormControl(''),
+    sprintDesc:new FormControl('')
+  });
 
   activeSprint = {
     name: 'SCRUM Sprint 2',

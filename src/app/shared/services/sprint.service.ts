@@ -18,4 +18,8 @@ export class SprintService {
    
     return this.http.get(`http://localhost:8080/tasks/bySprintId/${sprintId}`);
   }
+
+  createSprint(sprintData: any): Observable<any> {
+    return this.http.post('http://localhost:8080/sprint/createSprint', sprintData);
+}
 }

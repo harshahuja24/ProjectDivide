@@ -501,24 +501,24 @@
         <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
       </div>
       <div class="modal-body">
-        <form >
+        <form [formGroup]="sprintForm" (ngSubmit)="submitSprint()">
           <div class="row">
             <!-- Left side - Form inputs -->
             <div class="col-md-5 border-end">
               <div class="mb-3">
                 <label class="form-label">Sprint Title </label>
-                <input type="text" class="form-control" placeholder="Enter Sprint Title" >
+                <input type="text" class="form-control" formControlName="sprintTitle" placeholder="Enter Sprint Title" >
               </div>
           
               <div class="mb-3">
                 <label class="form-label">Start Date</label>
-                <input type="date" class="form-control">
+                <input type="date" class="form-control" formControlName="startDate">
               </div>
 
               
               <div class="mb-3">
                 <label class="form-label">End Date</label>
-                <input type="date" class="form-control">
+                <input type="date" class="form-control" formControlName="endDate">
               </div>
 
             </div>
@@ -527,7 +527,7 @@
             <div class="col-md-7">
               <div class="mb-3">
                 <label class="form-label">Sprint Description</label>
-                <angular-editor formControlName="taskDescription" [config]="config" ></angular-editor>
+                <angular-editor formControlName="sprintDesc" [config]="config" ></angular-editor>
               </div>
             </div>
           </div>
