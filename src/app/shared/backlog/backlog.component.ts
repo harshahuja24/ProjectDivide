@@ -2,6 +2,8 @@
 import { Component } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { SprintService } from '../services/sprint.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 interface Task {
   id: string;
@@ -24,6 +26,13 @@ export class BacklogComponent {
   isTaskModalOpen=false;
 
   constructor(private employeeService:EmployeeService, private sprintService:SprintService ){}
+
+  sprintForm=new FormGroup({ 
+    sprintTitle:new FormControl(''),
+    startDate:new FormControl(''),
+    endDate:new FormControl(''),
+    sprintDesc:new FormControl('')
+  });
 
   activeSprint = {
     name: 'SCRUM Sprint 2',
@@ -129,6 +138,18 @@ export class BacklogComponent {
         console.error('Error fetching sprints:', error);
       }
     });
+  }
+
+  submitSprint() {
+    console.log('Sprint Form Value:', this.sprintForm.value);
+    this.sprintService.createSprint(this.sprintForm.value).subscribe({
+      next: (data:any) => {
+        console.log('Sprint created successfully:', data);
+        this.getAllSprints(); // Refresh the list of sprints
+        this.sprintForm.reset(); // Reset the form after submission
+        this.isTaskModalOpen = false; // Close the modal
+      }
+    })
   }
     
 }
