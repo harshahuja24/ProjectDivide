@@ -17,61 +17,17 @@
         <div class="card-header bg-white py-3">
           <div class="row align-items-center">
             <div class="col"><strong>Name</strong></div>
-            <div class="col"><strong>Email</strong></div>
-            <div class="col"><strong>Phone</strong></div>
-            <div class="col"><strong>Address</strong></div>
             <div class="col"><strong>Admin</strong></div>
             <div class="col"><strong>Actions</strong></div>
           </div>
         </div>
         <div class="card-body p-0">
           <!-- Employee Entries -->
-          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
-            <div class="col">John Doe</div>
-            <div class="col">john.doe@example.com</div>
-            <div class="col">123-456-7890</div>
-            <div class="col">123 Main St, Anytown, USA</div>
+          <div class="row py-3 border-bottom mx-0 align-items-center employee-row" *ngFor="let e of employeesList" >
+            <div class="col">{{e.ename}}</div>
             <div class="col">
-              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
-            </div>
-            <div class="col">
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-
-          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
-            <div class="col">John Doe</div>
-            <div class="col">john.doe@example.com</div>
-            <div class="col">123-456-7890</div>
-            <div class="col">123 Main St, Anytown, USA</div>
-            <div class="col">
-              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
-            </div>
-            <div class="col">
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-
-          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
-            <div class="col">John Doe</div>
-            <div class="col">john.doe@example.com</div>
-            <div class="col">123-456-7890</div>
-            <div class="col">123 Main St, Anytown, USA</div>
-            <div class="col">
-              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
-            </div>
-            <div class="col">
-              <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
-            </div>
-          </div>
-
-          <div class="row py-3 border-bottom mx-0 align-items-center employee-row">
-            <div class="col">John Doe</div>
-            <div class="col">john.doe@example.com</div>
-            <div class="col">123-456-7890</div>
-            <div class="col">123 Main St, Anytown, USA</div>
-            <div class="col">
-              <span class="badge rounded-pill bg-primary px-3 py-2">Admin</span>
+              <span class="badge rounded-pill bg-primary px-3 py-2" *ngIf="e.isAdmin">Admin</span>
+              <span class="badge rounded-pill bg-primary px-3 py-2" *ngIf="!e.isAdmin">Not Admin</span>
             </div>
             <div class="col">
               <button class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash"></i></button>
