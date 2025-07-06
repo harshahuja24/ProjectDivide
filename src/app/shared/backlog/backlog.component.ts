@@ -32,6 +32,10 @@ export class BacklogComponent {
     estimate: 10
   };
 
+  ngOnInit() {
+    this.getAllSprints();
+  }
+
   activeSprintTasks: Task[] = [
     {
       id: 'SCRUM-1',
@@ -116,19 +120,129 @@ export class BacklogComponent {
   //     }
   //   });
   // }
-
-  allSprints:any = [];
-
-  getAllSprints() {
-    this.sprintService.getAllSprints().subscribe({
-      next: (data:any) => {
-        console.log(data);
-        this.allSprints = data;
-      },
-      error: (error:any) => {
-        console.error('Error fetching sprints:', error);
-      }
-    });
+getStatusBadgeClass(status: string): string {
+  switch(status) {
+    case 'TODO': return 'bg-secondary';
+    case 'IN PROGRESS': return 'bg-warning';
+    case 'DONE': return 'bg-success';
+    default: return 'bg-primary';
   }
+}
+
+getCompletedTasks(taskList: any[]): number {
+  return taskList.filter(task => task.taskStatus === 'DONE').length;
+}
+
+getStatusClass(status: string): string {
+  switch(status) {
+    case 'TODO': return 'todo';
+    case 'IN PROGRESS': return 'progress';
+    case 'DONE': return 'done';
+    default: return 'todo';
+  }
+}
+getDuration(startDate: string, endDate: string): number {
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+  const diffTime = Math.abs(end.getTime() - start.getTime());
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  return diffDays;
+}
+
+getStatusIcon(status: string): string {
+  switch(status) {
+    case 'TODO': return 'fa-circle';
+    case 'IN PROGRESS': return 'fa-clock';
+    case 'DONE': return 'fa-check-circle';
+    default: return 'fa-circle';
+  }
+}
+
+
+editTask(taskId: number) {
+  console.log('Editing task:', taskId);
+  // Add your edit logic here
+}
+
+getInitials(assignedTo: number): string {
+  // You can replace this with actual user name lookup
+  return `U${assignedTo}`;
+}
+
+
+deleteTask(taskId: number) {
+  console.log('Deleting task:', taskId);
+  // Add your task deletion logic here
+}
+allSprints:any = [];
+
+
+getAllSprints() {
+  this.sprintService.getAllSprints().subscribe({
+    next: (sprints: any[]) => {
+      console.log('Raw sprints data:', sprints); // Debug: see the actual structure
+      
+      // Initialize each sprint with empty taskList
+      sprints.forEach(sprint => {
+        sprint.taskList = [];
+        console.log('Sprint object:', sprint); // Debug: see each sprint's properties
+      });
+      
+      this.allSprints = sprints;
+      
+      // Now fetch tasks for each sprint
+      let completedRequests = 0;
+      const totalSprints = sprints.length;
+      
+      if (totalSprints === 0) {
+        console.log('No sprints found');
+        return;
+      }
+      
+      sprints.forEach((sprint: any) => {
+        // Check for different possible ID field names
+        const sprintId = sprint.id || sprint.sprintId || sprint._id || sprint.sprint_id;
+        
+        if (!sprintId) {
+          console.error('Sprint ID is undefined for sprint:', sprint);
+          completedRequests++;
+          if (completedRequests === totalSprints) {
+            console.log('All sprints with tasks loaded:', this.allSprints);
+          }
+          return;
+        }
+        
+        console.log('Fetching tasks for sprint ID:', sprintId); // Debug
+        
+        this.sprintService.getTaskBySprintId(sprintId).subscribe({
+          next: (tasks: any) => {
+            sprint.taskList = tasks || [];
+            completedRequests++;
+            
+            // Check if all requests are completed
+            if (completedRequests === totalSprints) {
+              console.log('All sprints with tasks loaded:', this.allSprints);
+              // You can call any callback function here if needed
+            }
+          },
+          error: (error: any) => {
+            console.error(`Error fetching tasks for sprint ${sprint.id}:`, error);
+            sprint.taskList = [];
+            completedRequests++;
+            
+            // Check if all requests are completed (including failed ones)
+            if (completedRequests === totalSprints) {
+              console.log('All sprints with tasks loaded:', this.allSprints);
+            }
+          }
+        });
+      });
+    },
+    error: (error: any) => {
+      console.error('Error fetching sprints:', error);
+      this.allSprints = [];
+    }
+  });
+}
     
 }

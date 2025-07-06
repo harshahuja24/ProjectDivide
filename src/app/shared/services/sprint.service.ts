@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
@@ -6,10 +7,15 @@ import { Observable, of } from 'rxjs';
 })
 export class SprintService {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
 
   getAllSprints():Observable<any> {
-     return of([]);;
+     return this.http.get("http://localhost:8080/sprint/getAllSprints");
+  }
+
+  getTaskBySprintId(sprintId: string) {
+   
+    return this.http.get(`http://localhost:8080/tasks/bySprintId/${sprintId}`);
   }
 }
