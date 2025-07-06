@@ -9,6 +9,6 @@ export class TaskService {
   constructor(private httpClient:HttpClient) {} 
 
   getAllBacklogTasks() {
-    return 
+    return this.httpClient.get('http://localhost:8080/tasks/backlog');
   }
 }
