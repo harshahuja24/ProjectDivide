@@ -1,5 +1,7 @@
 // backlog.component.ts
 import { Component } from '@angular/core';
+import { EmployeeService } from '../services/employee.service';
+import { SprintService } from '../services/sprint.service';
 
 interface Task {
   id: string;
@@ -20,6 +22,8 @@ interface Task {
 export class BacklogComponent {
 
   isTaskModalOpen=false;
+
+  constructor(private employeeService:EmployeeService, private sprintService:SprintService ){}
 
   activeSprint = {
     name: 'SCRUM Sprint 2',
@@ -101,4 +105,30 @@ export class BacklogComponent {
   startSprint() {
     // Sprint start logic
   }
+
+  // getAllBacklogTasks() {
+  //   this.employeeService.getAllBacklogTasks().subscribe({
+  //     next: (data) => {
+  //       console.log(data);
+  //     },
+  //     error: (error) => {
+  //       console.error('Error fetching backlog tasks:', error);
+  //     }
+  //   });
+  // }
+
+  allSprints:any = [];
+
+  getAllSprints() {
+    this.sprintService.getAllSprints().subscribe({
+      next: (data:any) => {
+        console.log(data);
+        this.allSprints = data;
+      },
+      error: (error:any) => {
+        console.error('Error fetching sprints:', error);
+      }
+    });
+  }
+    
 }
