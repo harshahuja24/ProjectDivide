@@ -5,6 +5,10 @@ import { SprintService } from '../services/sprint.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
+// Add these imports at the top of your component file
+import { forkJoin, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+
 interface Task {
   id: string;
   title: string;
@@ -33,7 +37,13 @@ export class BacklogComponent {
     endDate:new FormControl(''),
     sprintDesc:new FormControl('')
   });
+sprintExpanded: boolean[] = [];
 
+  // Add this method to toggle sprint expansion
+  toggleSprint(index: number): void {
+    this.sprintExpanded[index] = !this.sprintExpanded[index];
+  }
+innerHTML="";
   activeSprint = {
     name: 'SCRUM Sprint 2',
     dateRange: '5 Dec - 12 Dec',
@@ -41,8 +51,10 @@ export class BacklogComponent {
     estimate: 10
   };
 
-  async ngOnInit() {
-    await this.getAllSprints();
+   ngOnInit() {
+     this.getAllSprints();
+         this.sprintExpanded = new Array(this.allSprints.length).fill(false);
+
   }
 
   activeSprintTasks: Task[] = [
@@ -186,65 +198,55 @@ deleteTask(taskId: number) {
 allSprints:any = [];
 
 
-async getAllSprints() {
+getAllSprints() {
   this.sprintService.getAllSprints().subscribe({
-    next: async (sprints: any[]) => {
-      console.log('Raw sprints data:', sprints); // Debug: see the actual structure
+    next: (sprints: any[]) => {
+      console.log('Raw sprints data:', sprints);
       
-      // Initialize each sprint with empty taskList
-      sprints.forEach(sprint => {
-        sprint.taskList = [];
-        console.log('Sprint object:', sprint); // Debug: see each sprint's properties
-      });
-      
-      this.allSprints = sprints;
-      
-      // Now fetch tasks for each sprint
-      let completedRequests = 0;
-      const totalSprints = sprints.length;
-      
-      if (totalSprints === 0) {
+      if (!sprints || sprints.length === 0) {
         console.log('No sprints found');
+        this.allSprints = [];
         return;
       }
-      
+
+      // Initialize each sprint with empty taskList
       sprints.forEach((sprint: any) => {
-        // Check for different possible ID field names
+        sprint.taskList = [];
+      });
+
+      // Use forkJoin to fetch all tasks concurrently
+      const taskObservables = sprints.map((sprint: any) => {
         const sprintId = sprint.id || sprint.sprintId || sprint._id || sprint.sprint_id;
         
         if (!sprintId) {
           console.error('Sprint ID is undefined for sprint:', sprint);
-          completedRequests++;
-          if (completedRequests === totalSprints) {
-            console.log('All sprints with tasks loaded:', this.allSprints);
-          }
-          return;
+          return of(sprint); // Return sprint as-is if no ID
         }
-        
-        console.log('Fetching tasks for sprint ID:', sprintId); // Debug
-        
-        this.sprintService.getTaskBySprintId(sprintId).subscribe({
-          next: async (tasks: any) => {
+
+        console.log('Fetching tasks for sprint ID:', sprintId);
+        return this.sprintService.getTaskBySprintId(sprintId).pipe(
+          map((tasks: any) => {
             sprint.taskList = tasks || [];
-            completedRequests++;
-            
-            // Check if all requests are completed
-            if (completedRequests === totalSprints) {
-              console.log('All sprints with tasks loaded:', this.allSprints);
-              // You can call any callback function here if needed
-            }
-          },
-          error: (error: any) => {
-            console.error(`Error fetching tasks for sprint ${sprint.id}:`, error);
+            return sprint;
+          }),
+          catchError((error: any) => {
+            console.error(`Error fetching tasks for sprint ${sprintId}:`, error);
             sprint.taskList = [];
-            completedRequests++;
-            
-            // Check if all requests are completed (including failed ones)
-            if (completedRequests === totalSprints) {
-              console.log('All sprints with tasks loaded:', this.allSprints);
-            }
-          }
-        });
+            return of(sprint); // Return sprint with empty taskList on error
+          })
+        );
+      });
+
+      // Wait for all task requests to complete
+      forkJoin(taskObservables).subscribe({
+        next: (sprintsWithTasks: any[]) => {
+          this.allSprints = sprintsWithTasks;
+          console.log('All sprints with tasks loaded:', this.allSprints);
+        },
+        error: (error: any) => {
+          console.error('Error in forkJoin:', error);
+          this.allSprints = sprints; // At least set sprints without tasks
+        }
       });
     },
     error: (error: any) => {
@@ -254,21 +256,44 @@ async getAllSprints() {
   });
 }
 
-async submitSprint() {
+// async submitSprint() {
+//   console.log('Sprint Form Value:', this.sprintForm.value);
+  
+//   try {
+//     await this.sprintService.createSprint(this.sprintForm.value).subscribe(()=>{
+//       console.log('Response received, proceeding with cleanup...');
+//         this.sprintForm.reset();
+//         this.isTaskModalOpen = false;
+       
+//         console.log('All cleanup completed');
+//          this.getAllSprints();
+//     });
+      
+//   } catch (error) {
+//     console.error('Unexpected error in submitSprint:', error);
+//     this.isTaskModalOpen = false;
+//      await this.getAllSprints();
+//   }
+
+//    await this.getAllSprints();
+// }
+
+ submitSprint() {
     console.log('Sprint Form Value:', this.sprintForm.value);
      this.sprintService.createSprint(this.sprintForm.value).subscribe({
-      next: async (data:any) => {
-        console.log('Sprint created successfully:');
+      next: (response) => {
+        console.log('Sprint created successfully:', response);
         this.sprintForm.reset(); // Reset the form after submission
         this.isTaskModalOpen = false; // Close the modal
-        await this.getAllSprints(); // Refresh the list of sprints
+        this.getAllSprints(); // Refresh the list of sprints
+        this.sprintExpanded = new Array(this.allSprints.length).fill(false);
       },
       error: (error) => {
         console.error('Error creating sprint:', error);
       }
     })
-    this.isTaskModalOpen = false; // Close the modal
-        await this.getAllSprints(); // Refresh the list of sprints
+
   }
-    
+
+
 }
