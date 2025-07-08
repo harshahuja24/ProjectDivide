@@ -127,8 +127,9 @@ innerHTML="";
     // Sprint creation logic
   }
 
-  startSprint() {
-    // Sprint start logic
+  startSprint(sprintId:any ) {
+    console.log('Starting sprint with ID:', sprintId);
+    this.sprintService.startSprint(sprintId).subscribe(()=> console.log('Sprint started successfully'));
   }
 
   // getAllBacklogTasks() {

@@ -22,4 +22,8 @@ export class SprintService {
   createSprint(sprintData: any): Observable<any> {
     return this.http.post('http://localhost:8080/sprint/createSprint', sprintData);
 }
+
+  startSprint(sprintId: string): Observable<any> {
+      return this.http.put(`http://localhost:8080/sprint/startSprint/${sprintId}`, null);
+  }
 }
