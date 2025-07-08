@@ -5,9 +5,9 @@
     <h1>Backlog</h1>
     <div class="header-actions">
       <div class="search-box">
-        <input type="text" placeholder="Search issues..." class="form-control">
+        <input type="text" placeholder="Search tasks..." class="form-control">
       </div>
-      <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">
+      <button class="btn btn-primary" (click)="createSprint()" (click)="isSprintModalOpen = true">
         <i class="fas fa-plus"></i>
         Create Sprint
       </button>
@@ -42,7 +42,7 @@
         <div class="sprint-stats" *ngIf="!sprintExpanded[i]">
           <span class="stat-item">
             <i class="fas fa-tasks"></i>
-            {{ sprint.taskList.length }} issues
+            {{ sprint.taskList.length }} tasks
           </span>
           <span class="stat-item">
             <i class="fas fa-check-circle"></i>
@@ -68,7 +68,7 @@
       <div class="sprint-detailed-stats">
         <div class="stat-card">
           <div class="stat-value">{{ sprint.taskList.length }}</div>
-          <div class="stat-label">Total Issues</div>
+          <div class="stat-label">Total tasks</div>
         </div>
         <div class="stat-card">
           <div class="stat-value">{{ getCompletedTasks(sprint.taskList) }}</div>
@@ -83,12 +83,80 @@
       <!-- Sprint Tasks -->
       <div class="sprint-tasks">
         <div class="tasks-header">
-          <h6>Issues in Sprint</h6>
-          <button class="btn-create-issue" title="Create Issue">
+          <h6>tasks in Sprint</h6>
+          <button class="btn-create-task" title="Create task" (click)="createTask(sprint.sprintId)">
             <i class="fas fa-plus"></i>
-            Create Issue
+            Create Task
           </button>
         </div>
+
+        <!-- Modal Container -->
+<div class="modal-container" [class.show]="isTaskModalOpen">
+  <!-- Backdrop -->
+  <div class="custom-backdrop"></div>
+  
+<!-- Modal -->
+<div class="modal fade show d-block" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Assign New Task</h5>
+        <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitTask()" [formGroup]="createTaskForm">
+          <div class="row">
+            <!-- Left side - Form inputs -->
+            <div class="col-md-5 border-end">
+              <div class="mb-3">
+                <label class="form-label">Task Name</label>
+                <input type="text" class="form-control" placeholder="Enter task name" formControlName="taskName">
+              </div>
+              <!-- <div class="mb-3">
+                <label class="form-label">Project</label>
+                <select class="form-select" formControlName="taskProject">
+                  <option selected disabled>Select project</option>
+                  <option value="webdesign" >Web Design </option>
+                  <option  value="mobileComputing">Mobile Computing </option>
+                </select>
+              </div> -->
+              <div class="mb-3">
+                <label class="form-label">Assign To</label>
+                <select class="form-select" formControlName="taskAssignedTo">
+                  <option  *ngFor="let employee of employees" [value]="employee.eid">{{employee.ename}}</option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Status</label>
+                <select class="form-select" formControlName="taskStatus">
+                  <option selected disabled>Select status</option>
+                  <option value="todo">To Do</option>
+                  <option value="todo">In Progress</option>
+                  <option value="todo">Done</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- Right side - Rich text editor -->
+            <div class="col-md-7">
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <angular-editor formControlName="taskDescription" [config]="config" ></angular-editor>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Task</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>
+</div>
 
         <div class="task-list">
           <div *ngFor="let task of sprint.taskList" class="task-item" [class.completed]="task.taskStatus === 'DONE'">
@@ -144,11 +212,11 @@
           <div class="empty-icon">
             <i class="fas fa-clipboard-list"></i>
           </div>
-          <h6>No issues in this sprint</h6>
-          <p>Create your first issue to get started</p>
-          <button class="btn-create-issue">
+          <h6>No tasks in this sprint</h6>
+          <p>Create your first task to get started</p>
+          <button class="btn-create-task">
             <i class="fas fa-plus"></i>
-            Create Issue
+            Create task
           </button>
         </div>
       </div>
@@ -160,7 +228,7 @@
     <div class="backlog-header">
       <div class="backlog-title">
         <h5>Backlog</h5>
-        <span class="issue-count">{{ backlogTasks?.length || 0 }} issues</span>
+        <span class="task-count">{{ backlogTasks?.length || 0 }} tasks</span>
       </div>
     </div>
 
@@ -202,7 +270,7 @@
 </div>
 
 <!-- Modal Container -->
-<div class="modal-container" [class.show]="isTaskModalOpen">
+<div class="modal-container" [class.show]="isSprintModalOpen">
   <!-- Backdrop -->
   <div class="custom-backdrop"></div>
   
@@ -528,7 +596,7 @@
   font-weight: 600;
 }
 
-.btn-create-issue {
+.btn-create-task {
   background: #0052cc;
   color: white;
   border: none;
@@ -543,7 +611,7 @@
   transition: all 0.2s;
 }
 
-.btn-create-issue:hover {
+.btn-create-task:hover {
   background: #0747a6;
 }
 
@@ -733,7 +801,7 @@
   font-weight: 600;
 }
 
-.issue-count {
+.task-count {
   background: #c1c7d0;
   color: #172b4d;
   padding: 4px 8px;

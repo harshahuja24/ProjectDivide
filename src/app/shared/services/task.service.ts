@@ -11,4 +11,8 @@ export class TaskService {
   getAllBacklogTasks() {
     return this.httpClient.get('http://localhost:8080/tasks/backlog');
   }
+
+  createTask(taskData: any) {
+    return this.httpClient.post('http://localhost:8080/tasks/create', taskData);
+  }
 }
