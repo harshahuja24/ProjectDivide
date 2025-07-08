@@ -1,74 +1,60 @@
 <div class="kanban-container">
-  <!-- Column Headers -->
+  <!-- Column Headers (only one at the top) -->
   <div class="kanban-headers">
-    <div class="header">TO DO 3</div>
+    <div class="header">TO DO</div>
     <div class="header">IN PROGRESS</div>
     <div class="header">DONE ✓</div>
   </div>
 
-  <!-- User Groups -->
-  <div class="user-groups">
-    <div class="user-group" *ngFor="let user of users">
-      <!-- User Header -->
-      <div class="user-header" (click)="toggleExpand(user)">
-        <div class="user-info">
-          <span class="expand-icon">{{ user.isExpanded ? 'v' : '>' }}</span>
-          <div class="avatar" [attr.data-initials]="user.initials">
-            {{user.initials}}
-          </div>
-          <span class="user-name">{{user.name}}</span>
-          <span class="task-count">{{user.taskCount}}</span>
+  <!-- Employee Groups -->
+  <div class="employee-groups">
+    <div class="employee-group" *ngFor="let employee of kanbanEmployees">
+      <!-- Employee Header -->
+      <div class="employee-header" (click)="toggleExpand(employee)">
+        <div class="employee-info">
+          <span class="expand-icon">{{ employee.isExpanded ? '▼' : '▶' }}</span>
+          <span class="employee-name">{{ employee.name }}</span>
         </div>
       </div>
 
-      <!-- Tasks Container -->
-      <div class="tasks-container" [class.expanded]="user.isExpanded">
-        <!-- Todo Column -->
-        <div class="column">
-          <div class="task-card" *ngFor="let task of user.tasks.todo">
-            <div class="project-indicator" [ngClass]="task.project">
-              <span class="project-badge">{{task.projectName}}</span>
-              <span class="task-id">{{task.id}}</span>
-            </div>
-            <div class="task-title">{{task.title}}</div>
-            <div class="task-footer">
-              <div class="task-points" *ngIf="task.points">{{task.points}}</div>
-              <div class="assignee-avatar" [attr.data-initials]="user.initials">
-                {{user.initials}}
+      <!-- Tasks Container (shown if expanded) -->
+      <div class="tasks-container" *ngIf="employee.isExpanded">
+        <div class="kanban-columns">
+          <!-- Todo Column -->
+          <div class="column">
+            <div class="task-card" *ngFor="let task of employee.tasks.todo">
+              <div class="task-id">{{ task.id }}</div>
+              <div class="task-title">{{ task.title }}</div>
+              <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- In Progress Column -->
-        <div class="column">
-          <div class="task-card" *ngFor="let task of user.tasks.inProgress">
-            <div class="project-indicator" [ngClass]="task.project">
-              <span class="project-badge">{{task.projectName}}</span>
-              <span class="task-id">{{task.id}}</span>
-            </div>
-            <div class="task-title">{{task.title}}</div>
-            <div class="task-footer">
-              <div class="task-points" *ngIf="task.points">{{task.points}}</div>
-              <div class="assignee-avatar" [attr.data-initials]="user.initials">
-                {{user.initials}}
+          <!-- In Progress Column -->
+          <div class="column">
+            <div class="task-card in-progress" *ngFor="let task of employee.tasks.inProgress">
+              <div class="task-id">{{ task.id }}</div>
+              <div class="task-title">{{ task.title }}</div>
+              <div class="task-desc" [innerHTML]="task.desc" *ngIf="task.desc">{{ task.desc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Done Column -->
-        <div class="column">
-          <div class="task-card" *ngFor="let task of user.tasks.done">
-            <div class="project-indicator" [ngClass]="task.project">
-              <span class="project-badge">{{task.projectName}}</span>
-              <span class="task-id">{{task.id}}</span>
-            </div>
-            <div class="task-title">{{task.title}}</div>
-            <div class="task-footer">
-              <div class="task-points" *ngIf="task.points">{{task.points}}</div>
-              <div class="assignee-avatar" [attr.data-initials]="user.initials">
-                {{user.initials}}
+          <!-- Done Column -->
+          <div class="column">
+            <div class="task-card done" *ngFor="let task of employee.tasks.done">
+              <div class="task-id">{{ task.id }}</div>
+              <div class="task-title">{{ task.title }}</div>
+              <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
               </div>
             </div>
           </div>

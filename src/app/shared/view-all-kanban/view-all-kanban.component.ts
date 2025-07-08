@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { EmployeeService } from '../services/employee.service';
+import { TaskService } from '../services/task.service';
 
-interface KanbanUser {
+interface KanbanEmployee {
   id: string;
   name: string;
-  initials: string;
-  taskCount: string;
   isExpanded: boolean;
   tasks: {
     todo: KanbanTask[];
@@ -14,11 +14,11 @@ interface KanbanUser {
 }
 
 interface KanbanTask {
-  id: string;
-  title: string;
-  projectName: string;
-  project: 'design' | 'development';  // for styling
-  points?: number;
+  id: string;      // taskId from TaskDTO
+  title: string;   // taskTitle from TaskDTO
+  desc: string;    // taskDesc from TaskDTO (optional, if you want to display description)
+  createdAt: string; // LocalDateTime as string, if you want to display it
+  // add more fields if needed from TaskDTO
 }
 
 @Component({
@@ -26,74 +26,57 @@ interface KanbanTask {
   templateUrl: './view-all-kanban.component.html',
   styleUrls: ['./view-all-kanban.component.css']
 })
-export class ViewAllKanbanComponent {
-  users: KanbanUser[] = [
-    {
-      id: 'SG',
-      name: 'Simran Gurdasani',
-      initials: 'SG',
-      taskCount: '(2 tasks)',
-      isExpanded: false,
-      tasks: {
-        todo: [
-          {
-            id: 'DES-102',
-            title: 'Review Documentation',
-            projectName: 'Design',
-            project: 'design',
-            points: 5
-          },
-          {
-            id: 'DEV-205',
-            title: 'Update User Interface',
-            projectName: 'Development',
-            project: 'development',
-            points: 8
-          }
-        ],
-        inProgress: [],
-        done: []
-      }
-    },
-    {
-      id: 'HA',
-      name: 'Harsh Ahuja',
-      initials: 'HA',
-      taskCount: '(3 tasks)',
-      isExpanded: true,
-      tasks: {
-        todo: [
-          {
-            id: 'DES-101',
-            title: 'Gather Changes and Updates',
-            projectName: 'Design',
-            project: 'design',
-            points: 10
-          }
-        ],
-        inProgress: [
-          {
-            id: 'DEV-103',
-            title: 'Implement New Features',
-            projectName: 'Development',
-            project: 'development',
-            points: 13
-          }
-        ],
-        done: [
-          {
-            id: 'DES-100',
-            title: 'Create Wireframes',
-            projectName: 'Design',
-            project: 'design',
-            points: 8
-          }
-        ]
-      }
-    }
-];
+export class ViewAllKanbanComponent implements OnInit {
+  employees: any[] = [];
+  kanbanEmployees: KanbanEmployee[] = [];
 
-  toggleExpand(user: KanbanUser): void {
-    user.isExpanded = !user.isExpanded;
+  constructor(
+    private employeeService: EmployeeService,
+    private taskService: TaskService
+  ) {}
+
+  ngOnInit() {
+    this.getAllEmployeesAndTasks();
+  }
+
+  getAllEmployeesAndTasks() {
+    this.employeeService.getAllEmployees().subscribe((data: any[]) => {
+      this.employees = data || [];
+      this.kanbanEmployees = [];
+      this.employees.forEach(emp => {
+        this.taskService.getActiveSprintTasksByEmployee(emp.eid).subscribe((tasks: any[]) => {
+          console.log('Tasks for employee:', emp.ename, tasks);
+          const kanbanEmployee: KanbanEmployee = {
+            id: emp.eid.toString(),
+            name: emp.ename,
+            isExpanded: false,
+            tasks: {
+              todo: [],
+              inProgress: [],
+              done: []
+            }
+          };
+
+          tasks.forEach(task => {
+            const status = (task.taskStatus || '').toLowerCase();
+            const kanbanTask: KanbanTask = {
+              id: task.taskId ? `TASK-${task.taskId}` : '', // always use taskId
+              title: task.taskTitle,
+              desc: task.taskDesc,
+              createdAt: task.createdAt // you may want to format this for display
+            };
+            if (status === "TODO" || "todo") kanbanEmployee.tasks.todo.push(kanbanTask);
+            else if (status === 'in progress') kanbanEmployee.tasks.inProgress.push(kanbanTask);
+            else if (status === 'done') kanbanEmployee.tasks.done.push(kanbanTask);
+          });
+
+          this.kanbanEmployees.push(kanbanEmployee);
+        });
+      });
+    });
+  }
+
+  toggleExpand(employee: KanbanEmployee): void {
+    employee.isExpanded = !employee.isExpanded;
   }
 }
