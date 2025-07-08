@@ -1,159 +1,418 @@
 <!-- backlog.component.html -->
 <div class="backlog-container">
-    <!-- Header -->
-    <div class="header-section">
-      <h1>Backlog</h1>
-      <div class="header-actions">
-        <div class="search-box">
-          <input type="text" placeholder="Search" class="form-control">
-        </div>
-        <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">Create sprint</button>
-
+  <!-- Header -->
+  <div class="header-section">
+    <h1>Backlog</h1>
+    <div class="header-actions">
+      <div class="search-box">
+        <input type="text" placeholder="Search issues..." class="form-control">
       </div>
-    </div>
-  
-    <!-- Active Sprint Section -->
-   <!-- Jira-style Sprint Board -->
-<div class="sprint-container mb-4" *ngFor="let sprint of allSprints">
-  <!-- Sprint Header -->
-  <div class="sprint-header">
-    <div class="sprint-info">
-      <div class="sprint-title">
-        <h4>{{ sprint.sprintTitle }}</h4>
-        <div class="sprint-dates-container">
-          <i class="fas fa-calendar-alt"></i>
-          <span class="sprint-dates">{{ sprint.startDate | date:'MMM d, yyyy' }} - {{ sprint.endDate | date:'MMM d, yyyy' }}</span>
-          <span class="sprint-duration">({{ getDuration(sprint.startDate, sprint.endDate) }} days)</span>
-        </div>
-      </div>
-      <p class="sprint-description">{{ sprint.sprintDesc }}</p>
-      <div class="sprint-stats">
-        <span class="stat-item">
-          <i class="fas fa-tasks"></i>
-          {{ sprint.taskList.length }} issues
-        </span>
-        <span class="stat-item">
-          <i class="fas fa-check-circle text-success"></i>
-          {{ getCompletedTasks(sprint.taskList) }} done
-        </span>
-      </div>
-    </div>
-    <div class="sprint-actions">
-      <button class="btn-action btn-start">
-        <i class="fas fa-play"></i>
-        Start Sprint
-      </button>
-      <button class="btn-action btn-secondary">
-        <i class="fas fa-ellipsis-h"></i>
+      <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">
+        <i class="fas fa-plus"></i>
+        Create Sprint
       </button>
     </div>
   </div>
 
-  <!-- Sprint Tasks -->
-  <div class="sprint-tasks">
-    <div *ngFor="let task of sprint.taskList" class="task-card" [class.completed]="task.taskStatus === 'DONE'">
-      <div class="task-main">
-        <div class="task-type">
-          <i class="fas fa-circle task-type-icon" [class.story]="true"></i>
-        </div>
-        <div class="task-content">
-          <div class="task-header">
-            <span class="task-id">{{ sprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
-            <div class="task-priority">
-              <i class="fas fa-arrow-up text-danger"></i>
-            </div>
-          </div>
-          <h6 class="task-title">{{ task.taskTitle }}</h6>
-          <p class="task-desc">{{ task.taskDesc }}</p>
-        </div>
+  <!-- Active Sprint Section -->
+  <div class="sprint-container" *ngFor="let sprint of allSprints; let i = index">
+    <!-- Sprint Header (Clickable) -->
+    <div class="sprint-header" (click)="toggleSprint(i)" [class.expanded]="sprintExpanded[i]">
+      <div class="sprint-toggle">
+        <i class="fas" [class.fa-chevron-right]="!sprintExpanded[i]" [class.fa-chevron-down]="sprintExpanded[i]"></i>
       </div>
       
-      <div class="task-footer">
-        <div class="task-status-container">
-          <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
-            <i class="fas" [class]="getStatusIcon(task.taskStatus)"></i>
-            {{ task.taskStatus }}
-          </span>
-          <div class="task-meta">
-            <span class="task-created">Created: {{ task.createdAt | date:'MMM d, yyyy' }}</span>
-            <span class="task-updated">Updated: {{ task.createdAt | date:'h:mm a' }}</span>
+      <div class="sprint-info">
+        <div class="sprint-title-row">
+          <h4 class="sprint-title">{{ sprint.sprintTitle }}</h4>
+          <div class="sprint-status-badge">
+            <span class="status-dot"></span>
+            Active
           </div>
         </div>
-        <div class="task-right">
-          <div class="task-assignee">
-            <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
-              {{ getInitials(task.assignedTo) }}
+        
+        <div class="sprint-meta">
+          <span class="sprint-dates">
+            <i class="fas fa-calendar-alt"></i>
+            {{ sprint.startDate | date:'MMM d, yyyy' }} - {{ sprint.endDate | date:'MMM d, yyyy' }}
+          </span>
+          <span class="sprint-duration">{{ getDuration(sprint.startDate, sprint.endDate) }} days</span>
+        </div>
+        
+        <div class="sprint-stats" *ngIf="!sprintExpanded[i]">
+          <span class="stat-item">
+            <i class="fas fa-tasks"></i>
+            {{ sprint.taskList.length }} issues
+          </span>
+          <span class="stat-item">
+            <i class="fas fa-check-circle"></i>
+            {{ getCompletedTasks(sprint.taskList) }} completed
+          </span>
+        </div>
+      </div>
+
+      <div class="sprint-actions" (click)="$event.stopPropagation()">
+        <button class="btn-action btn-start" title="Start Sprint">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="btn-action btn-menu" title="More actions">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Sprint Content (Collapsible) -->
+    <div class="sprint-content" [class.expanded]="sprintExpanded[i]" *ngIf="sprintExpanded[i]">
+      <div class="sprint-description" *ngIf="sprint.sprintDesc" [innerHTML]="sprint.sprintDesc"></div>
+      
+      <div class="sprint-detailed-stats">
+        <div class="stat-card">
+          <div class="stat-value">{{ sprint.taskList.length }}</div>
+          <div class="stat-label">Total Issues</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ getCompletedTasks(sprint.taskList) }}</div>
+          <div class="stat-label">Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">{{ sprint.taskList.length - getCompletedTasks(sprint.taskList) }}</div>
+          <div class="stat-label">Remaining</div>
+        </div>
+      </div>
+
+      <!-- Sprint Tasks -->
+      <div class="sprint-tasks">
+        <div class="tasks-header">
+          <h6>Issues in Sprint</h6>
+          <button class="btn-create-issue" title="Create Issue">
+            <i class="fas fa-plus"></i>
+            Create Issue
+          </button>
+        </div>
+
+        <div class="task-list">
+          <div *ngFor="let task of sprint.taskList" class="task-item" [class.completed]="task.taskStatus === 'DONE'">
+            <div class="task-type-indicator">
+              <i class="fas fa-bookmark task-type-icon"></i>
+            </div>
+            
+            <div class="task-content">
+              <div class="task-header">
+                <span class="task-key">{{ sprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
+                <span class="task-title">{{ task.taskTitle }}</span>
+              </div>
+              
+              <div class="task-description" *ngIf="task.taskDesc">
+                {{ task.taskDesc }}
+              </div>
+              
+              <div class="task-meta">
+                <div class="task-dates">
+                  <span class="created-date">Created {{ task.createdAt | date:'MMM d, yyyy' }}</span>
+                  <span class="updated-date">Updated {{ task.createdAt | date:'h:mm a' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="task-right">
+              <div class="task-status">
+                <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
+                  {{ task.taskStatus }}
+                </span>
+              </div>
+              
+              <div class="task-assignee">
+                <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
+                  {{ getInitials(task.assignedTo) }}
+                </div>
+              </div>
+              
+              <div class="task-actions">
+                <button class="btn-icon" (click)="editTask(task.taskId)" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+                <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
             </div>
           </div>
+        </div>
+        
+        <!-- Empty state -->
+        <div *ngIf="sprint.taskList.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <h6>No issues in this sprint</h6>
+          <p>Create your first issue to get started</p>
+          <button class="btn-create-issue">
+            <i class="fas fa-plus"></i>
+            Create Issue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backlog Section -->
+  <div class="backlog-section">
+    <div class="backlog-header">
+      <div class="backlog-title">
+        <h5>Backlog</h5>
+        <span class="issue-count">{{ backlogTasks?.length || 0 }} issues</span>
+      </div>
+    </div>
+
+    <div class="backlog-content">
+      <div *ngFor="let task of backlogTasks" class="backlog-item">
+        <div class="task-type-indicator">
+          <i class="fas fa-bookmark task-type-icon"></i>
+        </div>
+        
+        <div class="task-content">
+          <div class="task-header">
+            <span class="task-key">{{ task.id }}</span>
+            <span class="task-title">{{ task.title }}</span>
+          </div>
+        </div>
+
+        <div class="task-right">
+          <div class="task-status">
+            <span class="status-badge" [class]="getStatusClass(task.status)">
+              {{ task.status }}
+            </span>
+          </div>
+          
+          <div class="task-assignee">
+            <div class="avatar-circle" [title]="'Assigned to ' + task.assignee">
+              {{ task.assignee }}
+            </div>
+          </div>
+          
           <div class="task-actions">
-            <button class="btn-icon" (click)="editTask(task.taskId)" title="Edit">
-              <i class="fas fa-edit"></i>
-            </button>
-            <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
+            <button class="btn-icon btn-danger" title="Delete">
               <i class="fas fa-trash"></i>
             </button>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Empty state -->
-    <div *ngIf="sprint.taskList.length === 0" class="empty-state">
-      <i class="fas fa-tasks"></i>
-      <h6>No issues in this sprint</h6>
-      <p>Drag issues here or create new ones to get started</p>
-      <button class="btn-create">
-        <i class="fas fa-plus"></i>
-        Create Issue
-      </button>
+  </div>
+</div>
+
+<!-- Modal Container -->
+<div class="modal-container" [class.show]="isTaskModalOpen">
+  <!-- Backdrop -->
+  <div class="custom-backdrop"></div>
+  
+  <!-- Modal -->
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create New Sprint</h5>
+          <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="sprintForm" (ngSubmit)="submitSprint()">
+            <div class="row">
+              <!-- Left side - Form inputs -->
+              <div class="col-md-5 border-end">
+                <div class="mb-3">
+                  <label class="form-label">Sprint Title</label>
+                  <input type="text" class="form-control" formControlName="sprintTitle" placeholder="Enter Sprint Title">
+                </div>
+            
+                <div class="mb-3">
+                  <label class="form-label">Start Date</label>
+                  <input type="date" class="form-control" formControlName="startDate">
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label">End Date</label>
+                  <input type="date" class="form-control" formControlName="endDate">
+                </div>
+              </div>
+              
+              <!-- Right side - Rich text editor -->
+              <div class="col-md-7">
+                <div class="mb-3">
+                  <label class="form-label">Sprint Description</label>
+                  <angular-editor formControlName="sprintDesc" [config]="config"></angular-editor>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-success">Submit</button>
+              <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
 <style>
-.sprint-container {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  overflow: hidden;
-  margin-bottom: 24px;
+/* Main Container */
+.backlog-container {
+  background: #f4f5f7;
+  min-height: 100vh;
+  padding: 24px;
 }
 
-.sprint-header {
-  background: #f8f9fa;
-  padding: 20px 24px;
-  border-bottom: 1px solid #e1e5e9;
+/* Header */
+.header-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
+  margin-bottom: 32px;
+  background: white;
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.header-section h1 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.search-box {
+  position: relative;
+}
+
+.search-box .form-control {
+  width: 300px;
+  padding: 10px 16px;
+  border: 2px solid #dfe1e6;
+  border-radius: 6px;
+  background: #fafbfc;
+  transition: all 0.2s;
+}
+
+.search-box .form-control:focus {
+  border-color: #0052cc;
+  background: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0,82,204,0.1);
+}
+
+.btn-primary {
+  background: #0052cc;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+
+.btn-primary:hover {
+  background: #0747a6;
+  transform: translateY(-1px);
+}
+
+/* Sprint Container */
+.sprint-container {
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #dfe1e6;
+}
+
+/* Sprint Header */
+.sprint-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f7f8f9;
+  border-bottom: 1px solid #dfe1e6;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.sprint-header:hover {
+  background: #ebecf0;
+}
+
+.sprint-header.expanded {
+  background: #e4fcff;
+  border-bottom-color: #00b8d9;
+}
+
+.sprint-toggle {
+  margin-right: 12px;
+  color: #6b778c;
+  font-size: 14px;
+  transition: transform 0.2s;
 }
 
 .sprint-info {
   flex: 1;
 }
 
-.sprint-title {
+.sprint-title-row {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 8px;
 }
 
-.sprint-dates-container {
+.sprint-title {
+  margin: 0;
+  color: #172b4d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.sprint-status-badge {
+  background: #e3fcef;
+  color: #006644;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
   display: flex;
   align-items: center;
-  gap: 8px;
-  color: #6b778c;
-  font-size: 14px;
+  gap: 6px;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #36b37e;
+}
+
+.sprint-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
 }
 
 .sprint-dates {
-  background: #e3fcef;
-  color: #36b37e;
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-weight: 500;
-  border: 1px solid #36b37e;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b778c;
+  font-size: 14px;
 }
 
 .sprint-duration {
@@ -165,16 +424,9 @@
   font-weight: 500;
 }
 
-.sprint-description {
-  color: #6b778c;
-  margin: 8px 0;
-  font-size: 14px;
-}
-
 .sprint-stats {
   display: flex;
   gap: 16px;
-  margin-top: 12px;
 }
 
 .stat-item {
@@ -188,73 +440,146 @@
 .sprint-actions {
   display: flex;
   gap: 8px;
-  align-items: flex-start;
 }
 
 .btn-action {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
+  width: 36px;
+  height: 36px;
+  border: 1px solid #dfe1e6;
+  border-radius: 6px;
+  background: white;
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: center;
   transition: all 0.2s;
+  color: #6b778c;
+}
+
+.btn-action:hover {
+  background: #f4f5f7;
+  border-color: #c1c7d0;
 }
 
 .btn-start {
   background: #0052cc;
   color: white;
+  border-color: #0052cc;
 }
 
 .btn-start:hover {
   background: #0747a6;
 }
 
-.btn-secondary {
-  background: #f4f5f7;
-  color: #6b778c;
+/* Sprint Content */
+.sprint-content {
+  padding: 20px 24px;
+  background: white;
+  border-top: 1px solid #dfe1e6;
 }
 
-.btn-secondary:hover {
-  background: #e4e6ea;
-}
-
-.sprint-tasks {
-  padding: 16px 24px;
-}
-
-.task-card {
-  background: #fff;
-  border: 1px solid #e1e5e9;
-  border-radius: 6px;
+.sprint-description {
+  margin-bottom: 20px;
   padding: 16px;
-  margin-bottom: 12px;
-  transition: all 0.2s;
-  cursor: pointer;
+  background: #f7f8f9;
+  border-radius: 6px;
+  color: #6b778c;
+  line-height: 1.5;
 }
 
-.task-card:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+.sprint-detailed-stats {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #f7f8f9;
+  padding: 16px;
+  border-radius: 6px;
+  text-align: center;
+  flex: 1;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 600;
+  color: #172b4d;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #6b778c;
+  margin-top: 4px;
+  text-transform: uppercase;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.tasks-header h6 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.btn-create-issue {
+  background: #0052cc;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s;
+}
+
+.btn-create-issue:hover {
+  background: #0747a6;
+}
+
+/* Task Items */
+.task-item, .backlog-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid #dfe1e6;
+  border-radius: 6px;
+  background: white;
+  margin-bottom: 8px;
+  transition: all 0.2s;
+}
+
+.task-item:hover, .backlog-item:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   border-color: #c1c7d0;
 }
 
-.task-card.completed {
+.task-item.completed {
   background: #f8fff8;
   border-color: #36b37e;
 }
 
-.task-main {
+.task-type-indicator {
+  width: 20px;
   display: flex;
-  gap: 12px;
-  margin-bottom: 12px;
+  align-items: center;
+  justify-content: center;
 }
 
 .task-type-icon {
-  width: 16px;
-  height: 16px;
   color: #0052cc;
+  font-size: 14px;
 }
 
 .task-content {
@@ -263,48 +588,41 @@
 
 .task-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
+  gap: 12px;
+  margin-bottom: 4px;
 }
 
-.task-id {
+.task-key {
   color: #6b778c;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
 }
 
 .task-title {
-  margin: 0 0 8px 0;
   color: #172b4d;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 500;
 }
 
-.task-desc {
+.task-description {
   color: #6b778c;
-  font-size: 14px;
-  margin: 0;
+  font-size: 13px;
   line-height: 1.4;
+  margin-bottom: 8px;
 }
 
-.sprint-title h4 {
-  margin: 0;
-  color: #172b4d;
-  font-weight: 600;
-}
-
-.task-footer {
+.task-meta {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: 16px;
+  gap: 16px;
 }
 
-.task-status-container {
+.task-dates {
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  gap: 12px;
+  font-size: 11px;
+  color: #6b778c;
 }
 
 .task-right {
@@ -314,21 +632,14 @@
 }
 
 .status-badge {
-  padding: 6px 12px;
-  border-radius: 16px;
-  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border: 2px solid;
-  transition: all 0.2s;
-}
+  border: 1px solid;
+    text-align: center;
 
-.status-badge:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
 .status-badge.todo {
@@ -341,36 +652,16 @@
   background: #fff4e6;
   color: #ff8b00;
   border-color: #ff8b00;
+  text-align: center;
+  width: auto;
+  height: auto;
+  
 }
 
 .status-badge.done {
   background: #e3fcef;
-  color: #36b37e;
+  color: #006644;
   border-color: #36b37e;
-}
-
-.task-meta {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  font-size: 11px;
-  color: #6b778c;
-}
-
-.task-created, .task-updated {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.task-created:before {
-  content: "📅";
-  font-size: 10px;
-}
-
-.task-updated:before {
-  content: "🕐";
-  font-size: 10px;
 }
 
 .avatar-circle {
@@ -383,7 +674,7 @@
   align-items: center;
   justify-content: center;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .task-actions {
@@ -414,13 +705,55 @@
   color: #de350b;
 }
 
+/* Backlog Section */
+.backlog-section {
+  background: white;
+  border-radius: 8px;
+  margin-top: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1px solid #dfe1e6;
+}
+
+.backlog-header {
+  padding: 16px 20px;
+  background: #f7f8f9;
+  border-bottom: 1px solid #dfe1e6;
+}
+
+.backlog-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.backlog-title h5 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.issue-count {
+  background: #c1c7d0;
+  color: #172b4d;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.backlog-content {
+  padding: 16px 20px;
+}
+
+/* Empty State */
 .empty-state {
   text-align: center;
-  padding: 48px 24px;
+  padding: 40px 20px;
   color: #6b778c;
 }
 
-.empty-state i {
+.empty-icon {
   font-size: 48px;
   margin-bottom: 16px;
   color: #c1c7d0;
@@ -429,118 +762,103 @@
 .empty-state h6 {
   margin: 0 0 8px 0;
   color: #172b4d;
+  font-size: 16px;
 }
 
 .empty-state p {
-  margin: 0 0 24px 0;
+  margin: 0 0 20px 0;
   font-size: 14px;
 }
 
-.btn-create {
-  background: #0052cc;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 500;
+/* Modal Styles */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1050;
+  display: none;
 }
 
-.btn-create:hover {
-  background: #0747a6;
+.modal-container.show {
+  display: block;
+}
+
+.custom-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  z-index: 1040;
+}
+
+.modal-content {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.modal-header {
+  background: #f7f8f9;
+  border-bottom: 1px solid #dfe1e6;
+  padding: 20px 24px;
+}
+
+.modal-title {
+  color: #172b4d;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-label {
+  color: #172b4d;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.form-control {
+  border: 2px solid #dfe1e6;
+  border-radius: 6px;
+  padding: 10px 12px;
+  transition: all 0.2s;
+}
+
+.form-control:focus {
+  border-color: #0052cc;
+  box-shadow: 0 0 0 3px rgba(0,82,204,0.1);
+  outline: none;
+}
+
+.btn-success {
+  background: #36b37e;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.btn-success:hover {
+  background: #00875a;
+}
+
+.btn-secondary {
+  background: #f4f5f7;
+  border: 1px solid #dfe1e6;
+  color: #6b778c;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.btn-secondary:hover {
+  background: #e4e6ea;
 }
 </style>
-  
-    <!-- Backlog Section -->
-    <div class="card shadow-sm">
-      <div class="card-header bg-white py-3">
-        <div class="row align-items-center">
-          <div class="col">
-            <h5 class="mb-0">Backlog (2 issues)</h5>
-          </div>
-          <div class="col-auto">
-          </div>
-        </div>
-      </div>
-  
-      <div class="card-body p-0">
-        <div *ngFor="let task of backlogTasks" class="row py-3 border-bottom mx-0 align-items-center employee-row">
-          <div class="col">
-            <div class="d-flex align-items-center">
-              <div class="task-title">{{ task.id }} {{ task.title }}</div>
-            </div>
-          </div>
-          <div class="col-auto">
-            <span class="badge rounded-pill bg-secondary px-3 py-2">{{ task.status }}</span>
-          </div>
-          <div class="col-auto">
-            <div class="avatar" [attr.data-initials]="task.assignee"></div>
-          </div>
-          <div class="col-auto">
-            <button class="btn btn-sm btn-outline-danger"><i class="fas fa-trash"></i></button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  
-<!-- Modal Container -->
-<div class="modal-container" [class.show]="isTaskModalOpen">
-  <!-- Backdrop -->
-  <div class="custom-backdrop"></div>
-  
-<!-- Modal -->
-<div class="modal fade show d-block" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Create New Sprint</h5>
-        <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
-      </div>
-      <div class="modal-body">
-        <form [formGroup]="sprintForm" (ngSubmit)="submitSprint()">
-          <div class="row">
-            <!-- Left side - Form inputs -->
-            <div class="col-md-5 border-end">
-              <div class="mb-3">
-                <label class="form-label">Sprint Title </label>
-                <input type="text" class="form-control" formControlName="sprintTitle" placeholder="Enter Sprint Title" >
-              </div>
-          
-              <div class="mb-3">
-                <label class="form-label">Start Date</label>
-                <input type="date" class="form-control" formControlName="startDate">
-              </div>
-
-              
-              <div class="mb-3">
-                <label class="form-label">End Date</label>
-                <input type="date" class="form-control" formControlName="endDate">
-              </div>
-
-            </div>
-            
-            <!-- Right side - Rich text editor -->
-            <div class="col-md-7">
-              <div class="mb-3">
-                <label class="form-label">Sprint Description</label>
-                <angular-editor formControlName="sprintDesc" [config]="config" ></angular-editor>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="submit" class="btn btn-success">Submit</button>
-            <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
-          </div>
-        </form>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
