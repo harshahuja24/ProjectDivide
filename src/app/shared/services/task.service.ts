@@ -15,4 +15,8 @@ export class TaskService {
   createTask(taskData: any) {
     return this.httpClient.post('http://localhost:8080/tasks/create', taskData);
   }
+
+  getTaskBySprintId(sprintId: string) {
+    return this.httpClient.get(`http://localhost:8080/tasks/bySprintId/${sprintId}`);
+  }
 }

@@ -12,265 +12,528 @@
     </div>
   </div>
 
-  <div class="sprint-container" *ngFor="let sprint of allSprints; let i = index">
-    <div class="sprint-header" (click)="toggleSprint(i)" [class.expanded]="sprintExpanded[i]">
-      <div class="sprint-toggle">
-        <i class="fas" [class.fa-chevron-right]="!sprintExpanded[i]" [class.fa-chevron-down]="sprintExpanded[i]"></i>
+  <!-- History Section -->
+  <div class="section-container">
+    <div class="section-header" (click)="toggleSection('history')" [class.expanded]="sectionExpanded.history">
+      <div class="section-toggle">
+        <i class="fas" [class.fa-chevron-right]="!sectionExpanded.history" [class.fa-chevron-down]="sectionExpanded.history"></i>
       </div>
-      
-      <div class="sprint-info">
-        <div class="sprint-title-row">
-          <h4 class="sprint-title">{{ sprint.sprintTitle }}</h4>
-          <div class="sprint-status-badge" [ngClass]="{'active': sprint.activeYN, 'inactive': !sprint.activeYN}">
-            <span class="status-dot" [ngClass]="{'active': sprint.activeYN, 'inactive': !sprint.activeYN}"></span>
-            {{ sprint.activeYN ? 'Active' : 'Inactive' }}
-          </div>
-        </div>
-        
-        <div class="sprint-meta">
-          <span class="sprint-dates">
-            <i class="fas fa-calendar-alt"></i>
-            {{ sprint.startDate | date:'MMM d, yyyy' }} - {{ sprint.endDate | date:'MMM d, yyyy' }}
-          </span>
-          <span class="sprint-duration">{{ getDuration(sprint.startDate, sprint.endDate) }} days</span>
-        </div>
-        
-        <div class="sprint-stats" *ngIf="!sprintExpanded[i]">
-          <span class="stat-item">
-            <i class="fas fa-tasks"></i>
-            {{ sprint.taskList.length }} tasks
-          </span>
-          <span class="stat-item">
-            <i class="fas fa-check-circle"></i>
-            {{ getCompletedTasks(sprint.taskList) }} completed
-          </span>
-        </div>
-      </div>
-
-      <div class="sprint-actions" (click)="$event.stopPropagation()">
-        <button class="btn-action btn-start" title="Start Sprint" (click)="startSprint(sprint.sprintId)">
-          <i class="fas fa-play"></i>
-        </button>
-        <button class="btn-action btn-menu" title="More actions">
-          <i class="fas fa-ellipsis-h"></i>
-        </button>
-      </div>
+      <h3 class="section-title">History</h3>
+      <span class="section-count">{{ historySprints.length }} sprints</span>
     </div>
-
-    <div class="sprint-content" [class.expanded]="sprintExpanded[i]" *ngIf="sprintExpanded[i]">
-      <div class="sprint-description" *ngIf="sprint.sprintDesc" [innerHTML]="sprint.sprintDesc"></div>
-      
-      <div class="sprint-detailed-stats">
-        <div class="stat-card">
-          <div class="stat-value">{{ sprint.taskList.length }}</div>
-          <div class="stat-label">Total tasks</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">{{ getCompletedTasks(sprint.taskList) }}</div>
-          <div class="stat-label">Completed</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">{{ sprint.taskList.length - getCompletedTasks(sprint.taskList) }}</div>
-          <div class="stat-label">Remaining</div>
-        </div>
-      </div>
-
-      <div class="sprint-tasks">
-        <div class="tasks-header">
-          <h6>tasks in Sprint</h6>
-          <button class="btn-create-task" title="Create task" (click)="createTask(sprint.sprintId)">
-            <i class="fas fa-plus"></i>
-            Create Task
-          </button>
-        </div>
-
-        <!-- Modal Container -->
-<div class="modal-container" [class.show]="isTaskModalOpen">
-  <!-- Backdrop -->
-  <div class="custom-backdrop"></div>
-  
-<!-- Modal -->
-<div class="modal fade show d-block" tabindex="-1">
-  <div class="modal-dialog modal-xl modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Assign New Task</h5>
-        <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
-      </div>
-      <div class="modal-body">
-        <form (ngSubmit)="submitTask()" [formGroup]="createTaskForm">
-          <div class="row">
-            <!-- Left side - Form inputs -->
-            <div class="col-md-5 border-end">
-              <div class="mb-3">
-                <label class="form-label">Task Name</label>
-                <input type="text" class="form-control" placeholder="Enter task name" formControlName="taskName">
-              </div>
-              <!-- <div class="mb-3">
-                <label class="form-label">Project</label>
-                <select class="form-select" formControlName="taskProject">
-                  <option selected disabled>Select project</option>
-                  <option value="webdesign" >Web Design </option>
-                  <option  value="mobileComputing">Mobile Computing </option>
-                </select>
-              </div> -->
-              <div class="mb-3">
-                <label class="form-label">Assign To</label>
-                <select class="form-select" formControlName="taskAssignedTo">
-                  <option  *ngFor="let employee of employees" [value]="employee.eid">{{employee.ename}}</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Status</label>
-                <select class="form-select" formControlName="taskStatus">
-                  <option selected disabled>Select status</option>
-                  <option value="todo">To Do</option>
-                  <option value="todo">In Progress</option>
-                  <option value="todo">Done</option>
-                </select>
+    
+    <div class="section-content" [class.expanded]="sectionExpanded.history" *ngIf="sectionExpanded.history">
+      <div class="sprint-container" *ngFor="let sprint of historySprints; let i = index">
+        <div class="sprint-header" (click)="toggleSprint('history', i)" [class.expanded]="sprintExpanded.history[i]">
+          <div class="sprint-toggle">
+            <i class="fas" [class.fa-chevron-right]="!sprintExpanded.history[i]" [class.fa-chevron-down]="sprintExpanded.history[i]"></i>
+          </div>
+          
+          <div class="sprint-info">
+            <div class="sprint-title-row">
+              <h4 class="sprint-title">{{ sprint.sprintTitle }}</h4>
+              <div class="sprint-status-badge inactive">
+                <span class="status-dot inactive"></span>
+                Completed
               </div>
             </div>
             
-            <!-- Right side - Rich text editor -->
-            <div class="col-md-7">
-              <div class="mb-3">
-                <label class="form-label">Description</label>
-                <angular-editor formControlName="taskDescription" [config]="config" ></angular-editor>
-              </div>
-            </div>
-          </div>
-
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
-            <button type="submit" class="btn btn-primary">Create Task</button>
-          </div>
-        </form>
-      </div>
-
-    </div>
-  </div>
-</div>
-</div>
-
-        <div class="task-list">
-          <div *ngFor="let task of sprint.taskList" class="task-item" [class.completed]="task.taskStatus === 'DONE'">
-            <div class="task-type-indicator">
-              <i class="fas fa-bookmark task-type-icon"></i>
+            <div class="sprint-meta">
+              <span class="sprint-dates">
+                <i class="fas fa-calendar-alt"></i>
+                {{ sprint.startDate | date:'MMM d, yyyy' }} - {{ sprint.endDate | date:'MMM d, yyyy' }}
+              </span>
+              <span class="sprint-duration">{{ getDuration(sprint.startDate, sprint.endDate) }} days</span>
             </div>
             
-            <div class="task-content">
-              <div class="task-header">
-                <span class="task-key">{{ sprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
-                <span class="task-title">{{ task.taskTitle }}</span>
-              </div>
-              
-              <div class="task-description" *ngIf="task.taskDesc">
-                {{ task.taskDesc }}
-              </div>
-              
-              <div class="task-meta">
-                <div class="task-dates">
-                  <span class="created-date">Created {{ task.createdAt | date:'MMM d, yyyy' }}</span>
-                  <span class="updated-date">Updated {{ task.createdAt | date:'h:mm a' }}</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="task-right">
-              <div class="task-status">
-                <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
-                  {{ task.taskStatus }}
-                </span>
-              </div>
-              
-              <div class="task-assignee">
-                <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
-                  {{ getInitials(task.assignedTo) }}
-                </div>
-              </div>
-              
-              <div class="task-actions">
-                <button class="btn-icon" (click)="editTask(task.taskId)" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
+            <div class="sprint-stats" *ngIf="!sprintExpanded.history[i]">
+              <span class="stat-item">
+                <i class="fas fa-tasks"></i>
+                {{ sprint.taskList.length }} tasks
+              </span>
+              <span class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                {{ getCompletedTasks(sprint.taskList) }} completed
+              </span>
             </div>
           </div>
         </div>
-        
-        <div *ngIf="sprint.taskList.length === 0" class="empty-state">
-          <div class="empty-icon">
-            <i class="fas fa-clipboard-list"></i>
+
+        <div class="sprint-content" [class.expanded]="sprintExpanded.history[i]" *ngIf="sprintExpanded.history[i]">
+          <div class="sprint-description" *ngIf="sprint.sprintDesc" [innerHTML]="sprint.sprintDesc"></div>
+          
+          <div class="sprint-detailed-stats">
+            <div class="stat-card">
+              <div class="stat-value">{{ sprint.taskList.length }}</div>
+              <div class="stat-label">Total tasks</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ getCompletedTasks(sprint.taskList) }}</div>
+              <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ sprint.taskList.length - getCompletedTasks(sprint.taskList) }}</div>
+              <div class="stat-label">Remaining</div>
+            </div>
           </div>
-          <h6>No tasks in this sprint</h6>
-          <p>Create your first task to get started</p>
-          <button class="btn-create-task">
-            <i class="fas fa-plus"></i>
-            Create task
-          </button>
+
+          <div class="sprint-tasks">
+            <div class="tasks-header">
+              <h6>Tasks in Sprint (Read Only)</h6>
+            </div>
+
+            <div class="task-list">
+              <div *ngFor="let task of sprint.taskList" class="task-item history-task" [class.completed]="task.taskStatus === 'DONE'">
+                <div class="task-type-indicator">
+                  <i class="fas fa-bookmark task-type-icon"></i>
+                </div>
+                
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-key">{{ sprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
+                    <span class="task-title">{{ task.taskTitle }}</span>
+                  </div>
+                  
+                  <div class="task-description" *ngIf="task.taskDesc">
+                    {{ task.taskDesc }}
+                  </div>
+                  
+                  <div class="task-meta">
+                    <div class="task-dates">
+                      <span class="created-date">Created {{ task.createdAt | date:'MMM d, yyyy' }}</span>
+                      <span class="updated-date">Updated {{ task.createdAt | date:'h:mm a' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-right">
+                  <div class="task-status">
+                    <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
+                      {{ task.taskStatus }}
+                    </span>
+                  </div>
+                  
+                  <div class="task-assignee">
+                    <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
+                      {{ getInitials(task.assignedTo) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="backlog-section">
-    <div class="backlog-header">
-      <div class="backlog-title">
-        <h5>Backlog</h5>
-        <span class="task-count">{{ backlogTasks.length || 0 }} tasks</span>
+  <!-- Current Sprint Section -->
+  <div class="section-container">
+    <div class="section-header" (click)="toggleSection('current')" [class.expanded]="sectionExpanded.current">
+      <div class="section-toggle">
+        <i class="fas" [class.fa-chevron-right]="!sectionExpanded.current" [class.fa-chevron-down]="sectionExpanded.current"></i>
       </div>
+      <h3 class="section-title">Current Sprint</h3>
+      <span class="section-count">{{ currentSprint ? '1 sprint' : '0 sprints' }}</span>
     </div>
-
-    <div class="backlog-content">
-      <div *ngFor="let task of backlogTasks" class="backlog-item">
-        <div class="task-type-indicator">
-          <i class="fas fa-bookmark task-type-icon"></i>
-        </div>
-        
-        <div class="task-content">
-          <div class="task-header">
-            <span class="task-key">{{ task.id }}</span>
-            <span class="task-title">{{ task.title }}</span>
-          </div>
-        </div>
-
-        <div class="task-right">
-          <div class="task-status">
-            <span class="status-badge" [class]="getStatusClass(task.status)">
-              {{ task.status }}
-            </span>
+    
+    <div class="section-content" [class.expanded]="sectionExpanded.current" *ngIf="sectionExpanded.current">
+      <div class="sprint-container" *ngIf="currentSprint">
+        <div class="sprint-header" (click)="toggleSprint('current', 0)" [class.expanded]="sprintExpanded.current[0]">
+          <div class="sprint-toggle">
+            <i class="fas" [class.fa-chevron-right]="!sprintExpanded.current[0]" [class.fa-chevron-down]="sprintExpanded.current[0]"></i>
           </div>
           
-          <div class="task-assignee">
-            <div class="avatar-circle" [title]="'Assigned to ' + task.assignee">
-              {{ task.assignee }}
+          <div class="sprint-info">
+            <div class="sprint-title-row">
+              <h4 class="sprint-title">{{ currentSprint.sprintTitle }}</h4>
+              <div class="sprint-status-badge active">
+                <span class="status-dot active"></span>
+                Active
+              </div>
+            </div>
+            
+            <div class="sprint-meta">
+              <span class="sprint-dates">
+                <i class="fas fa-calendar-alt"></i>
+                {{ currentSprint.startDate | date:'MMM d, yyyy' }} - {{ currentSprint.endDate | date:'MMM d, yyyy' }}
+              </span>
+              <span class="sprint-duration">{{ getDuration(currentSprint.startDate, currentSprint.endDate) }} days</span>
+            </div>
+            
+            <div class="sprint-stats" *ngIf="!sprintExpanded.current[0]">
+              <span class="stat-item">
+                <i class="fas fa-tasks"></i>
+                {{ currentSprint.taskList.length }} tasks
+              </span>
+              <span class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                {{ getCompletedTasks(currentSprint.taskList) }} completed
+              </span>
             </div>
           </div>
-          
-          <div class="task-actions">
-            <button class="btn-icon btn-danger" title="Delete">
-              <i class="fas fa-trash"></i>
+
+          <div class="sprint-actions" (click)="$event.stopPropagation()">
+            <button class="btn-action btn-stop" title="Stop Sprint" (click)="stopSprint(currentSprint.sprintId)">
+              <i class="fas fa-stop"></i>
             </button>
           </div>
         </div>
+
+        <div class="sprint-content" [class.expanded]="sprintExpanded.current[0]" *ngIf="sprintExpanded.current[0]">
+          <div class="sprint-description" *ngIf="currentSprint.sprintDesc" [innerHTML]="currentSprint.sprintDesc"></div>
+          
+          <div class="sprint-detailed-stats">
+            <div class="stat-card">
+              <div class="stat-value">{{ currentSprint.taskList.length }}</div>
+              <div class="stat-label">Total tasks</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ getCompletedTasks(currentSprint.taskList) }}</div>
+              <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ currentSprint.taskList.length - getCompletedTasks(currentSprint.taskList) }}</div>
+              <div class="stat-label">Remaining</div>
+            </div>
+          </div>
+
+          <div class="sprint-tasks">
+            <div class="tasks-header">
+              <h6>Tasks in Sprint</h6>
+              <button class="btn-create-task" title="Create task" (click)="createTask(currentSprint.sprintId)">
+                <i class="fas fa-plus"></i>
+                Create Task
+              </button>
+            </div>
+
+            <div class="task-list">
+              <div *ngFor="let task of currentSprint.taskList" class="task-item" [class.completed]="task.taskStatus === 'DONE'">
+                <div class="task-type-indicator">
+                  <i class="fas fa-bookmark task-type-icon"></i>
+                </div>
+                
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-key">{{ currentSprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
+                    <span class="task-title">{{ task.taskTitle }}</span>
+                  </div>
+                  
+                  <div class="task-description" *ngIf="task.taskDesc">
+                    {{ task.taskDesc }}
+                  </div>
+                  
+                  <div class="task-meta">
+                    <div class="task-dates">
+                      <span class="created-date">Created {{ task.createdAt | date:'MMM d, yyyy' }}</span>
+                      <span class="updated-date">Updated {{ task.createdAt | date:'h:mm a' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-right">
+                  <div class="task-status">
+                    <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
+                      {{ task.taskStatus }}
+                    </span>
+                  </div>
+                  
+                  <div class="task-assignee">
+                    <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
+                      {{ getInitials(task.assignedTo) }}
+                    </div>
+                  </div>
+                  
+                  <div class="task-actions">
+                    <button class="btn-icon" (click)="editTask(task.taskId)" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="!currentSprint" class="empty-state">
+        <div class="empty-icon">
+          <i class="fas fa-rocket"></i>
+        </div>
+        <h6>No active sprint</h6>
+        <p>Start a sprint from drafts to begin working</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Drafts Section -->
+  <div class="section-container">
+    <div class="section-header" (click)="toggleSection('drafts')" [class.expanded]="sectionExpanded.drafts">
+      <div class="section-toggle">
+        <i class="fas" [class.fa-chevron-right]="!sectionExpanded.drafts" [class.fa-chevron-down]="sectionExpanded.drafts"></i>
+      </div>
+      <h3 class="section-title">Drafts</h3>
+      <span class="section-count">{{ draftSprints.length }} sprints</span>
+    </div>
+    
+    <div class="section-content" [class.expanded]="sectionExpanded.drafts" *ngIf="sectionExpanded.drafts">
+      <div class="sprint-container" *ngFor="let sprint of draftSprints; let i = index">
+        <div class="sprint-header" (click)="toggleSprint('drafts', i)" [class.expanded]="sprintExpanded.drafts[i]">
+          <div class="sprint-toggle">
+            <i class="fas" [class.fa-chevron-right]="!sprintExpanded.drafts[i]" [class.fa-chevron-down]="sprintExpanded.drafts[i]"></i>
+          </div>
+          
+          <div class="sprint-info">
+            <div class="sprint-title-row">
+              <h4 class="sprint-title">{{ sprint.sprintTitle }}</h4>
+              <div class="sprint-status-badge draft">
+                <span class="status-dot draft"></span>
+                Draft
+              </div>
+            </div>
+            
+            <div class="sprint-meta">
+              <span class="sprint-dates">
+                <i class="fas fa-calendar-alt"></i>
+                {{ sprint.startDate | date:'MMM d, yyyy' }} - {{ sprint.endDate | date:'MMM d, yyyy' }}
+              </span>
+              <span class="sprint-duration">{{ getDuration(sprint.startDate, sprint.endDate) }} days</span>
+            </div>
+            
+            <div class="sprint-stats" *ngIf="!sprintExpanded.drafts[i]">
+              <span class="stat-item">
+                <i class="fas fa-tasks"></i>
+                {{ sprint.taskList.length }} tasks
+              </span>
+              <span class="stat-item">
+                <i class="fas fa-check-circle"></i>
+                {{ getCompletedTasks(sprint.taskList) }} completed
+              </span>
+            </div>
+          </div>
+
+          <div class="sprint-actions" (click)="$event.stopPropagation()">
+            <button class="btn-action btn-start" title="Start Sprint" (click)="startSprint(sprint.sprintId)" [disabled]="currentSprint !== null">
+              <i class="fas fa-play"></i>
+            </button>
+            <button class="btn-action btn-menu" title="More actions">
+              <i class="fas fa-ellipsis-h"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="sprint-content" [class.expanded]="sprintExpanded.drafts[i]" *ngIf="sprintExpanded.drafts[i]">
+          <div class="sprint-description" *ngIf="sprint.sprintDesc" [innerHTML]="sprint.sprintDesc"></div>
+          
+          <div class="sprint-detailed-stats">
+            <div class="stat-card">
+              <div class="stat-value">{{ sprint.taskList.length }}</div>
+              <div class="stat-label">Total tasks</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ getCompletedTasks(sprint.taskList) }}</div>
+              <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value">{{ sprint.taskList.length - getCompletedTasks(sprint.taskList) }}</div>
+              <div class="stat-label">Remaining</div>
+            </div>
+          </div>
+
+          <div class="sprint-tasks">
+            <div class="tasks-header">
+              <h6>Tasks in Sprint</h6>
+              <button class="btn-create-task" title="Create task" (click)="createTask(sprint.sprintId)">
+                <i class="fas fa-plus"></i>
+                Create Task
+              </button>
+            </div>
+
+            <div class="task-list">
+              <div *ngFor="let task of sprint.taskList" class="task-item" [class.completed]="task.taskStatus === 'DONE'">
+                <div class="task-type-indicator">
+                  <i class="fas fa-bookmark task-type-icon"></i>
+                </div>
+                
+                <div class="task-content">
+                  <div class="task-header">
+                    <span class="task-key">{{ sprint.sprintTitle.split(' ')[0] }}-{{ task.taskId }}</span>
+                    <span class="task-title">{{ task.taskTitle }}</span>
+                  </div>
+                  
+                  <div class="task-description" *ngIf="task.taskDesc">
+                    {{ task.taskDesc }}
+                  </div>
+                  
+                  <div class="task-meta">
+                    <div class="task-dates">
+                      <span class="created-date">Created {{ task.createdAt | date:'MMM d, yyyy' }}</span>
+                      <span class="updated-date">Updated {{ task.createdAt | date:'h:mm a' }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="task-right">
+                  <div class="task-status">
+                    <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
+                      {{ task.taskStatus }}
+                    </span>
+                  </div>
+                  
+                  <div class="task-assignee">
+                    <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
+                      {{ getInitials(task.assignedTo) }}
+                    </div>
+                  </div>
+                  
+                  <div class="task-actions">
+                    <button class="btn-icon" (click)="editTask(task.taskId)" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Backlog Section -->
+  <div class="section-container">
+    <div class="section-header" (click)="toggleSection('backlog')" [class.expanded]="sectionExpanded.backlog">
+      <div class="section-toggle">
+        <i class="fas" [class.fa-chevron-right]="!sectionExpanded.backlog" [class.fa-chevron-down]="sectionExpanded.backlog"></i>
+      </div>
+      <h3 class="section-title">Backlog</h3>
+      <span class="section-count">{{ backlogTasks.length }} tasks</span>
+    </div>
+    
+    <div class="section-content" [class.expanded]="sectionExpanded.backlog" *ngIf="sectionExpanded.backlog">
+      <div class="backlog-content">
+        <div *ngFor="let task of backlogTasks" class="backlog-item">
+          <div class="task-type-indicator">
+            <i class="fas fa-bookmark task-type-icon"></i>
+          </div>
+          
+          <div class="task-content">
+            <div class="task-header">
+              <span class="task-key">{{ task.taskKey }}</span>
+              <span class="task-title">{{ task.taskTitle }}</span>
+            </div>
+            
+            <div class="task-description" *ngIf="task.taskDesc">
+              {{ task.taskDesc }}
+            </div>
+          </div>
+
+          <div class="task-right">
+            <div class="task-status">
+              <span class="status-badge" [class]="getStatusClass(task.taskStatus)">
+                {{ task.taskStatus }}
+              </span>
+            </div>
+            
+            <div class="task-assignee">
+              <div class="avatar-circle" [title]="'Assigned to User ' + task.assignedTo">
+                {{ getInitials(task.assignedTo) }}
+              </div>
+            </div>
+            
+            <div class="task-actions">
+              <button class="btn-icon" (click)="moveTaskToSprint(task.taskId)" title="Move to Sprint">
+                <i class="fas fa-arrow-right"></i>
+              </button>
+              <button class="btn-icon btn-danger" (click)="deleteTask(task.taskId)" title="Delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div *ngIf="backlogTasks.length === 0" class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-clipboard-list"></i>
+          </div>
+          <h6>No tasks in backlog</h6>
+          <p>Tasks from incomplete sprints will appear here</p>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal Container -->
+<!-- Task Modal -->
+<div class="modal-container" [class.show]="isTaskModalOpen">
+  <div class="custom-backdrop"></div>
+  
+  <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Assign New Task</h5>
+          <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+        </div>
+        <div class="modal-body">
+          <form (ngSubmit)="submitTask()" [formGroup]="createTaskForm">
+            <div class="row">
+              <div class="col-md-5 border-end">
+                <div class="mb-3">
+                  <label class="form-label">Task Name</label>
+                  <input type="text" class="form-control" placeholder="Enter task name" formControlName="taskName">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Assign To</label>
+                  <select class="form-select" formControlName="taskAssignedTo">
+                    <option *ngFor="let employee of employees" [value]="employee.eid">{{employee.ename}}</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label">Status</label>
+                  <select class="form-select" formControlName="taskStatus">
+                    <option selected disabled>Select status</option>
+                    <option value="TODO">To Do</option>
+                    <option value="IN PROGRESS">In Progress</option>
+                    <option value="DONE">Done</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="col-md-7">
+                <div class="mb-3">
+                  <label class="form-label">Description</label>
+                  <angular-editor formControlName="taskDescription" [config]="config"></angular-editor>
+                </div>
+              </div>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+              <button type="submit" class="btn btn-primary">Create Task</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sprint Modal -->
 <div class="modal-container" [class.show]="isSprintModalOpen">
-  <!-- Backdrop -->
   <div class="custom-backdrop"></div>
   <div class="modal fade show d-block" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create New Sprint</h5>
-          <button type="button" class="btn-close" (click)="isTaskModalOpen = false"></button>
+          <button type="button" class="btn-close" (click)="isSprintModalOpen = false"></button>
         </div>
         <div class="modal-body">
           <form [formGroup]="sprintForm" (ngSubmit)="submitSprint()">
@@ -302,7 +565,7 @@
 
             <div class="modal-footer">
               <button type="submit" class="btn btn-success">Submit</button>
-              <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
+              <button type="button" class="btn btn-secondary" (click)="isSprintModalOpen = false">Cancel</button>
             </div>
           </form>
         </div>
@@ -310,3 +573,92 @@
     </div>
   </div>
 </div>
+
+<style>
+.section-container {
+  margin-bottom: 24px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: white;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.2s ease;
+}
+
+.section-header:hover {
+  background-color: #f8f9fa;
+}
+
+.section-header.expanded {
+  background-color: #f0f8ff;
+}
+
+.section-toggle {
+  margin-right: 12px;
+  color: #666;
+}
+
+.section-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  flex: 1;
+}
+
+.section-count {
+  color: #666;
+  font-size: 14px;
+  background: #f1f3f4;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.section-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.section-content.expanded {
+  max-height: 5000px;
+  padding: 16px;
+}
+
+.history-task {
+  opacity: 0.8;
+}
+
+.history-task .task-actions {
+  display: none;
+}
+
+.sprint-status-badge.draft {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.sprint-status-badge.draft .status-dot {
+  background: #ffc107;
+}
+
+.btn-start:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-action.btn-stop {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-action.btn-stop:hover {
+  background: #c82333;
+}
+</style>

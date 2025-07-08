@@ -23,7 +23,13 @@ export class SprintService {
     return this.http.post('http://localhost:8080/sprint/createSprint', sprintData);
 }
 
-  startSprint(sprintId: string): Observable<any> {
+  startSprint(sprintId: any): Observable<any> {
       return this.http.put(`http://localhost:8080/sprint/startSprint/${sprintId}`, null);
   }
+
+  stopSprint(sprintId: any): Observable<any> {
+      return this.http.put(`http://localhost:8080/sprint/stopSprint/${sprintId}`, null);
+  }
+
+  
 }
