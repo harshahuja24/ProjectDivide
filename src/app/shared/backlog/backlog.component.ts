@@ -41,8 +41,8 @@ export class BacklogComponent {
     estimate: 10
   };
 
-  ngOnInit() {
-    this.getAllSprints();
+  async ngOnInit() {
+    await this.getAllSprints();
   }
 
   activeSprintTasks: Task[] = [
@@ -186,9 +186,9 @@ deleteTask(taskId: number) {
 allSprints:any = [];
 
 
-getAllSprints() {
+async getAllSprints() {
   this.sprintService.getAllSprints().subscribe({
-    next: (sprints: any[]) => {
+    next: async (sprints: any[]) => {
       console.log('Raw sprints data:', sprints); // Debug: see the actual structure
       
       // Initialize each sprint with empty taskList
@@ -224,7 +224,7 @@ getAllSprints() {
         console.log('Fetching tasks for sprint ID:', sprintId); // Debug
         
         this.sprintService.getTaskBySprintId(sprintId).subscribe({
-          next: (tasks: any) => {
+          next: async (tasks: any) => {
             sprint.taskList = tasks || [];
             completedRequests++;
             
@@ -254,18 +254,21 @@ getAllSprints() {
   });
 }
 
-submitSprint() {
+async submitSprint() {
     console.log('Sprint Form Value:', this.sprintForm.value);
-    this.sprintService.createSprint(this.sprintForm.value).subscribe({
-      next: (data:any) => {
+     this.sprintService.createSprint(this.sprintForm.value).subscribe({
+      next: async (data:any) => {
         console.log('Sprint created successfully:');
-      },error: (error) => {
+        this.sprintForm.reset(); // Reset the form after submission
+        this.isTaskModalOpen = false; // Close the modal
+        await this.getAllSprints(); // Refresh the list of sprints
+      },
+      error: (error) => {
         console.error('Error creating sprint:', error);
       }
     })
-     this.getAllSprints(); // Refresh the list of sprints
-      this.sprintForm.reset(); // Reset the form after submission
-      this.isTaskModalOpen = false; // Close the modal
+    this.isTaskModalOpen = false; // Close the modal
+        await this.getAllSprints(); // Refresh the list of sprints
   }
     
 }
