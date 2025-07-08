@@ -4,7 +4,7 @@ interface KanbanUser {
   id: string;
   name: string;
   initials: string;
-  issueCount: string;
+  taskCount: string;
   isExpanded: boolean;
   tasks: {
     todo: KanbanTask[];
@@ -33,7 +33,7 @@ export class KanbanComponent {
       id: 'SG',
       name: 'Simran Gurdasani',
       initials: 'SG',
-      issueCount: '(2 issues)',
+      taskCount: '(2 tasks)',
       isExpanded: false,
       tasks: {
         todo: [

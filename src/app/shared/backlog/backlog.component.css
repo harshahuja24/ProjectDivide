@@ -373,7 +373,7 @@
   height: 8px;
   border-radius: 50%;
   background: #36b37e;
-  
+
 }
 
 .sprint-status-badge > .inactive {
@@ -512,7 +512,7 @@
   font-weight: 600;
 }
 
-.btn-create-issue {
+.btn-create-task {
   background: #0052cc;
   color: white;
   border: none;
@@ -527,7 +527,7 @@
   transition: all 0.2s;
 }
 
-.btn-create-issue:hover {
+.btn-create-task:hover {
   background: #0747a6;
 }
 
@@ -717,7 +717,7 @@
   font-weight: 600;
 }
 
-.issue-count {
+.task-count {
   background: #c1c7d0;
   color: #172b4d;
   padding: 4px 8px;

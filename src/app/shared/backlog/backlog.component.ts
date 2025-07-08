@@ -2,12 +2,13 @@
 import { Component } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { SprintService } from '../services/sprint.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Add these imports at the top of your component file
 import { forkJoin, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { TaskService } from '../services/task.service';
 
 interface Task {
   id: string;
@@ -26,10 +27,14 @@ interface Task {
   styleUrls: ['./backlog.component.css']
 })
 export class BacklogComponent {
-
+  activeYN!:boolean;
+  isAdminFlag!:boolean;
+isSprintModalOpen=false;
+adminId!:number;
   isTaskModalOpen=false;
+  employees: any[] = []; // Initialize as an empty array
 
-  constructor(private employeeService:EmployeeService, private sprintService:SprintService ){}
+  constructor(private employeeService:EmployeeService, private sprintService:SprintService,private taskService:TaskService ){}
 
   sprintForm=new FormGroup({ 
     sprintTitle:new FormControl(''),
@@ -37,6 +42,10 @@ export class BacklogComponent {
     endDate:new FormControl(''),
     sprintDesc:new FormControl('')
   });
+
+  // Removed duplicate ngOnInit()
+
+
 sprintExpanded: boolean[] = [];
 
   // Add this method to toggle sprint expansion
@@ -47,14 +56,35 @@ innerHTML="";
   activeSprint = {
     name: 'SCRUM Sprint 2',
     dateRange: '5 Dec - 12 Dec',
-    issues: '2 issues',
+    tasks: '2 tasks',
     estimate: 10
   };
 
    ngOnInit() {
      this.getAllSprints();
-         this.sprintExpanded = new Array(this.allSprints.length).fill(false);
+     this.sprintExpanded = new Array(this.allSprints.length).fill(false);
+     console.log(this.getAllEmployees())
+     this.getAllEmployees();
+  }
 
+  getAllEmployees() {
+    this.employeeService.getAllEmployees().subscribe({
+      next: (data) => {
+        console.log('Fetched employees:', data);
+        this.employees = data || []; // Ensure employees is defined
+        this.employees.forEach(employee => {
+          console.log('Employee:', employee);
+          if(employee['isAdmin'] === true) {
+            this.isAdminFlag = true;
+            this.adminId=employee['eid']
+            console.log('Admin ID:', this.adminId);
+          }
+        });
+      },
+      error: (error) => {
+        console.error('Error fetching employees:', error);
+      }
+    });
   }
 
   activeSprintTasks: Task[] = [
@@ -293,8 +323,54 @@ getAllSprints() {
         console.error('Error creating sprint:', error);
       }
     })
-
   }
 
+
+  
+  
+    createTaskForm = new FormGroup({
+      taskName: new FormControl('',[Validators.required]),
+      taskDescription: new FormControl('',[Validators.required]),
+      taskDeadline: new FormControl('',[Validators.required]),
+      taskAssignedTo: new FormControl('',[Validators.required]),
+      taskStatus: new FormControl('',[Validators.required]),
+      sprintId: new FormControl(0,[Validators.required])
+    });
+
+
+    createTask(sprintId: number) {
+    console.log('Creating task for sprint ID:', sprintId);
+    this.isTaskModalOpen = true; // Open the task creation modal
+    this.createTaskForm.reset(); // Reset the form for new task creation
+    this.createTaskForm.patchValue({ sprintId: sprintId }); // Set the sprintId in the form
+    console.log('Task creation form initialized with sprintId:', this.createTaskForm.value.sprintId);
+  }
+
+  
+    submitTask(){
+      console.log(this.createTaskForm.value);
+      
+      let body = {
+        taskTitle: this.createTaskForm.value.taskName,
+        taskDesc: this.createTaskForm.value.taskDescription,
+        assignedTo: Number( this.createTaskForm.value.taskAssignedTo),
+        taskStatus: this.createTaskForm.value.taskStatus,
+        sprintId: this.createTaskForm.value.sprintId,
+        activeYN: true,
+        assignedFrom: this.adminId // Assuming adminId is the ID of the user creating the task
+    }
+    console.log('Submitting task with body:', body),
+    this.taskService.createTask(body).subscribe({
+      next: (response:any) => {
+        console.log('Task created successfully:', response);
+        this.createTaskForm.reset(); // Reset the form after submission
+        this.isTaskModalOpen = false; // Close the modal
+        this.getAllSprints(); // Refresh the list of sprints
+      },
+      error: (error:any) => {
+        console.error('Error creating task:', error);
+      }
+    });
+  }
 
 }
