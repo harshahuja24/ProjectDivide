@@ -7,6 +7,8 @@
         <div class="search-box">
           <input type="text" placeholder="Search" class="form-control">
         </div>
+        <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">Create sprint</button>
+
       </div>
     </div>
   
@@ -460,7 +462,6 @@
             <h5 class="mb-0">Backlog (2 issues)</h5>
           </div>
           <div class="col-auto">
-            <button class="btn btn-primary" (click)="createSprint()" (click)="isTaskModalOpen = true">Create sprint</button>
           </div>
         </div>
       </div>
@@ -533,8 +534,8 @@
           </div>
 
           <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Submit</button>
             <button type="button" class="btn btn-secondary" (click)="isTaskModalOpen = false">Cancel</button>
-            <button type="submit" class="btn btn-primary">Create Sprint</button>
           </div>
         </form>
       </div>

@@ -253,5 +253,19 @@ getAllSprints() {
     }
   });
 }
+
+submitSprint() {
+    console.log('Sprint Form Value:', this.sprintForm.value);
+    this.sprintService.createSprint(this.sprintForm.value).subscribe({
+      next: (data:any) => {
+        console.log('Sprint created successfully:');
+      },error: (error) => {
+        console.error('Error creating sprint:', error);
+      }
+    })
+     this.getAllSprints(); // Refresh the list of sprints
+      this.sprintForm.reset(); // Reset the form after submission
+      this.isTaskModalOpen = false; // Close the modal
+  }
     
 }
