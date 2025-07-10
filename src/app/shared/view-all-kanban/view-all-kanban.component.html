@@ -18,15 +18,15 @@
       </div>
 
       <!-- Tasks Container (shown if expanded) -->
-      <div class="tasks-container" *ngIf="employee.isExpanded">
+      <div class="tasks-container" *ngIf="employee.isExpanded" >
         <div class="kanban-columns" cdkDropListGroup>
           <!-- Todo Column -->
           <div  cdkDropList
-              [cdkDropListData]="employee.tasks.todo"
-              class="example-list"
-              (cdkDropListDropped)="drop($event)" class="column">
+            [cdkDropListData]="employee.tasks.todo"
+            class="example-list"
+            (cdkDropListDropped)="drop($event, 'TODO')" class="column" >
             <div class="task-card" *ngFor="let task of employee.tasks.todo" cdkDrag>
-              <div class="task-id">{{ task.id }}</div>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
               <div class="task-created" *ngIf="task.createdAt">
@@ -37,12 +37,12 @@
           </div>
 
           <!-- In Progress Column -->
-          <div  cdkDropList
-              [cdkDropListData]="employee.tasks.inProgress"
-              class="example-list"
-              (cdkDropListDropped)="drop($event)" class="column">
+          <div cdkDropList
+            [cdkDropListData]="employee.tasks.inProgress"
+            class="example-list"
+            (cdkDropListDropped)="drop($event, 'IN PROGRESS')"  class="column">
             <div class="task-card in-progress" *ngFor="let task of employee.tasks.inProgress" cdkDrag>
-              <div class="task-id">{{ task.id }}</div>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc" *ngIf="task.desc">{{ task.desc }}</div>
               <div class="task-created" *ngIf="task.createdAt">
@@ -53,12 +53,12 @@
           </div>
 
           <!-- Done Column -->
-          <div  cdkDropList
-              [cdkDropListData]="employee.tasks.done"
-              class="example-list"
-              (cdkDropListDropped)="drop($event)" class="column">
+          <div   cdkDropList
+            [cdkDropListData]="employee.tasks.done"
+            class="example-list"
+            (cdkDropListDropped)="drop($event,'DONE')" class="column">
             <div class="task-card done" *ngFor="let task of employee.tasks.done" cdkDrag>
-              <div class="task-id">{{ task.id }}</div>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
               <div class="task-created" *ngIf="task.createdAt">
@@ -67,6 +67,7 @@
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </div>

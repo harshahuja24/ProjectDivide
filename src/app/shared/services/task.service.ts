@@ -28,4 +28,8 @@ export class TaskService {
   getTasksByEmployeeId(employeeId: number): Observable<any> {
   return this.httpClient.get(`http://localhost:8080/tasks/employee/${employeeId}`);
 }
+  updateTaskStatus(task:any){
+    return this.httpClient.put("http://localhost:8080/tasks/updateStatus", task);
+  }
+
 }
