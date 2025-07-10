@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularEditorModule } from '@kolkov/angular-editor';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 
 @NgModule({
@@ -20,7 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     HttpClientModule,
     AngularEditorModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   exports:[
     SidePanelComponent,

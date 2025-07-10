@@ -1,11 +1,32 @@
 <div class="kanban-container">
+  <!-- User Selection (for demonstration) -->
+  <div class="user-selector" *ngIf="showUserSelector">
+    <h3>Select User to Login:</h3>
+    <div class="user-list">
+      <button 
+        *ngFor="let emp of availableEmployees" 
+        (click)="setLoggedInUser(emp.eid)"
+        class="user-select-btn">
+        {{emp.name}} (ID: {{emp.eid}})
+      </button>
+    </div>
+  </div>
+
+  <!-- Kanban Board (only visible when user is logged in) -->
+  <div *ngIf="loggedInUserId && !showUserSelector">
+    <!-- Logged in user info -->
+    <div class="logged-in-user-info">
+      <span>Logged in as: <strong>{{loggedInEmployee?.ename}}</strong></span>
+      <button (click)="logout()" class="logout-btn">Logout</button>
+    </div>
+
     <!-- Column Headers -->
     <div class="kanban-headers">
-      <div class="header">TO DO 3</div>
-      <div class="header">IN PROGRESS</div>
-      <div class="header">DONE ✓</div>
+      <div class="header">TO DO {{employees[0]?.tasks?.todo?.length || 0}}</div>
+      <div class="header">IN PROGRESS {{employees[0]?.tasks?.inProgress?.length || 0}}</div>
+      <div class="header">DONE ✓ {{employees[0]?.tasks?.done?.length || 0}}</div>
     </div>
-  
+
     <!-- User Groups -->
     <div class="user-groups">
       <div class="user-group" *ngFor="let employee of employees">
@@ -17,12 +38,51 @@
               {{employee.initials}}
             </div>
             <span class="user-name">{{employee.name}}</span>
-            <!-- <span class="task-count">{{user.taskCount}}</span> -->
+            <span class="task-count">({{getTotalTaskCount(employee)}} tasks)</span>
           </div>
         </div>
-  
+
         <!-- Tasks Container -->
-        
+        <div class="tasks-container" *ngIf="employee.isExpanded">
+          <div class="task-columns">
+            <!-- TO DO Column -->
+            <div class="task-column">
+              <div class="task-card" *ngFor="let task of employee.tasks.todo">
+                <div class="task-header">
+                  <span class="task-id">{{task.id}}</span>
+                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                </div>
+                <div class="task-title">{{task.title}}</div>
+                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+              </div>
+            </div>
+
+            <!-- IN PROGRESS Column -->
+            <div class="task-column">
+              <div class="task-card" *ngFor="let task of employee.tasks.inProgress">
+                <div class="task-header">
+                  <span class="task-id">{{task.id}}</span>
+                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                </div>
+                <div class="task-title">{{task.title}}</div>
+                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+              </div>
+            </div>
+
+            <!-- DONE Column -->
+            <div class="task-column">
+              <div class="task-card" *ngFor="let task of employee.tasks.done">
+                <div class="task-header">
+                  <span class="task-id">{{task.id}}</span>
+                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                </div>
+                <div class="task-title">{{task.title}}</div>
+                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</div>

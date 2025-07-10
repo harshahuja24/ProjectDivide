@@ -25,4 +25,7 @@ export class TaskService {
     return this.httpClient.get<any[]>(`http://localhost:8080/tasks/active-sprint/employee/${employeeId}`);
   }
 
+  getTasksByEmployeeId(employeeId: number): Observable<any> {
+  return this.httpClient.get(`http://localhost:8080/tasks/employee/${employeeId}`);
+}
 }

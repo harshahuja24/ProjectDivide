@@ -19,10 +19,13 @@
 
       <!-- Tasks Container (shown if expanded) -->
       <div class="tasks-container" *ngIf="employee.isExpanded">
-        <div class="kanban-columns">
+        <div class="kanban-columns" cdkDropListGroup>
           <!-- Todo Column -->
-          <div class="column">
-            <div class="task-card" *ngFor="let task of employee.tasks.todo">
+          <div  cdkDropList
+              [cdkDropListData]="employee.tasks.todo"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)" class="column">
+            <div class="task-card" *ngFor="let task of employee.tasks.todo" cdkDrag>
               <div class="task-id">{{ task.id }}</div>
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
@@ -34,8 +37,11 @@
           </div>
 
           <!-- In Progress Column -->
-          <div class="column">
-            <div class="task-card in-progress" *ngFor="let task of employee.tasks.inProgress">
+          <div  cdkDropList
+              [cdkDropListData]="employee.tasks.inProgress"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)" class="column">
+            <div class="task-card in-progress" *ngFor="let task of employee.tasks.inProgress" cdkDrag>
               <div class="task-id">{{ task.id }}</div>
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc" *ngIf="task.desc">{{ task.desc }}</div>
@@ -47,8 +53,11 @@
           </div>
 
           <!-- Done Column -->
-          <div class="column">
-            <div class="task-card done" *ngFor="let task of employee.tasks.done">
+          <div  cdkDropList
+              [cdkDropListData]="employee.tasks.done"
+              class="example-list"
+              (cdkDropListDropped)="drop($event)" class="column">
+            <div class="task-card done" *ngFor="let task of employee.tasks.done" cdkDrag>
               <div class="task-id">{{ task.id }}</div>
               <div class="task-title">{{ task.title }}</div>
               <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
@@ -63,3 +72,5 @@
     </div>
   </div>
 </div>
+
+
