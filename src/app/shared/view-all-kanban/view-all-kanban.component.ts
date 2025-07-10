@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { TaskService } from '../services/task.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 interface KanbanEmployee {
   id: string;
@@ -14,10 +15,11 @@ interface KanbanEmployee {
 }
 
 interface KanbanTask {
-  id: string;      // taskId from TaskDTO
+  taskId: string;      // taskId from TaskDTO
   title: string;   // taskTitle from TaskDTO
   desc: string;    // taskDesc from TaskDTO (optional, if you want to display description)
-  createdAt: string; // LocalDateTime as string, if you want to display it
+  createdAt: string;
+  taskStatus: string; // LocalDateTime as string, if you want to display it
   // add more fields if needed from TaskDTO
 }
 
@@ -39,6 +41,37 @@ export class ViewAllKanbanComponent implements OnInit {
     this.getAllEmployeesAndTasks();
   }
 
+  drop(event: CdkDragDrop<any[]>, status: string) {
+
+   
+    if (event.previousContainer === event.container) {
+      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+    } else {
+      transferArrayItem(
+        event.previousContainer.data,
+        event.container.data,
+        event.previousIndex,
+        event.currentIndex,
+      );
+    }
+
+    console.log('Drop event:', event);
+    console.log('Previous Container:', event.previousContainer);
+    console.log('Current Container:', event.container);
+    console.log("status",status);
+
+    event.container.data[0].taskStatus = status;
+
+    this.taskService.updateTaskStatus(event.container.data[0]).subscribe(()=>{
+      console.log("Task status updated successfully");
+    });
+    console.log('Updated task status:', event.container.data[0].taskStatus);
+    console.log('Updated task:', event.container.data[0]);
+    console.log("Task Updated Successfully");
+
+
+  }
+
   getAllEmployeesAndTasks() {
     this.employeeService.getAllEmployees().subscribe((data: any[]) => {
       this.employees = data || [];
@@ -58,16 +91,18 @@ export class ViewAllKanbanComponent implements OnInit {
           };
 
           tasks.forEach(task => {
-            const status = (task.taskStatus || '').toLowerCase();
+            const status = task.taskStatus ;
             const kanbanTask: KanbanTask = {
-              id: task.taskId ? `TASK-${task.taskId}` : '', // always use taskId
+              taskId: task.taskId, // always use taskId
               title: task.taskTitle,
               desc: task.taskDesc,
-              createdAt: task.createdAt // you may want to format this for display
+              createdAt: task.createdAt,
+              taskStatus: task.taskStatus // you may want to format this for display
             };
-            if (status === "TODO" || "todo") kanbanEmployee.tasks.todo.push(kanbanTask);
-            else if (status === 'in progress') kanbanEmployee.tasks.inProgress.push(kanbanTask);
-            else if (status === 'done') kanbanEmployee.tasks.done.push(kanbanTask);
+            console.log("Task Status:", status);
+            if (status === "TODO" || status === "todo") kanbanEmployee.tasks.todo.push(kanbanTask);
+            else if (status === 'in progress' || status === "IN PROGRESS") kanbanEmployee.tasks.inProgress.push(kanbanTask);
+            else if (status === 'done' || status === "DONE") kanbanEmployee.tasks.done.push(kanbanTask);
           });
 
           this.kanbanEmployees.push(kanbanEmployee);

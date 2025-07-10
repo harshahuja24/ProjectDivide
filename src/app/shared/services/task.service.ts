@@ -25,4 +25,8 @@ export class TaskService {
     return this.httpClient.get<any[]>(`http://localhost:8080/tasks/active-sprint/employee/${employeeId}`);
   }
 
+  updateTaskStatus(task:any){
+    return this.httpClient.put("http://localhost:8080/tasks/updateStatus", task);
+  }
+
 }

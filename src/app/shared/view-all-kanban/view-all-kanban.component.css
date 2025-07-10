@@ -103,7 +103,7 @@
   box-shadow: 0 1px 4px rgba(9,30,66,.13);
   margin-bottom: 14px;
   padding: 14px 14px 10px 14px;
-  border-left: 4px solid #b3bac5;
+  border-left: 4px solid #0052cc;
   transition: box-shadow 0.2s, border-color 0.2s;
   cursor: pointer;
 }
@@ -112,6 +112,9 @@
   box-shadow: 0 4px 12px rgba(9,30,66,.18);
   border-color: #0052cc;
 }
+.task-card.todo{
+ box-shadow: 0 4px 12px rgba(9,30,66,.18);
+  border-color: #0052cc;}
 
 .task-card.in-progress {
   border-left-color: #ffab00;
