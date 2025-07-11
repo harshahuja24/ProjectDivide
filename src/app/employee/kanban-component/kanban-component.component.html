@@ -7,7 +7,7 @@
         *ngFor="let emp of availableEmployees" 
         (click)="setLoggedInUser(emp.eid)"
         class="user-select-btn">
-        {{emp.name}} (ID: {{emp.eid}})
+        {{emp.ename}} (ID: {{emp.eid}})
       </button>
     </div>
   </div>
@@ -33,11 +33,9 @@
         <!-- User Header -->
         <div class="user-header" (click)="toggleExpand(employee)">
           <div class="user-info">
-            <span class="expand-icon">{{ employee.isExpanded ? 'v' : '>' }}</span>
-            <div class="avatar" [attr.data-initials]="employee.initials">
-              {{employee.initials}}
-            </div>
-            <span class="user-name">{{employee.name}}</span>
+            <span class="expand-icon">{{ employee.isExpanded ? '▼' : '▶' }}</span>
+            <span class="user-name">{{employee.ename}}</span>
+            <span class="user-initials">{{getInitials(employee.ename)}}</span>
             <span class="task-count">({{getTotalTaskCount(employee)}} tasks)</span>
           </div>
         </div>
@@ -49,11 +47,27 @@
             <div class="task-column">
               <div class="task-card" *ngFor="let task of employee.tasks.todo">
                 <div class="task-header">
-                  <span class="task-id">{{task.id}}</span>
-                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                  <span class="task-id">#{{task.taskId}}</span>
+                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
+                    {{task.taskStatus}}
+                  </span>
                 </div>
-                <div class="task-title">{{task.title}}</div>
-                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+                <div class="task-title">{{task.taskTitle}}</div>
+                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
+                <div class="task-meta">
+                  <div class="task-sprint" *ngIf="task.sprintId">
+                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
+                  </div>
+                  <div class="task-created">
+                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
+                  </div>
+                  <div class="task-assignment" *ngIf="task.assignedTo">
+                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
+                  </div>
+                </div>
+                <div class="task-active-indicator" *ngIf="task.activeYN">
+                  <span class="active-badge">Active</span>
+                </div>
               </div>
             </div>
 
@@ -61,11 +75,27 @@
             <div class="task-column">
               <div class="task-card" *ngFor="let task of employee.tasks.inProgress">
                 <div class="task-header">
-                  <span class="task-id">{{task.id}}</span>
-                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                  <span class="task-id">#{{task.taskId}}</span>
+                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
+                    {{task.taskStatus}}
+                  </span>
                 </div>
-                <div class="task-title">{{task.title}}</div>
-                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+                <div class="task-title">{{task.taskTitle}}</div>
+                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
+                <div class="task-meta">
+                  <div class="task-sprint" *ngIf="task.sprintId">
+                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
+                  </div>
+                  <div class="task-created">
+                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
+                  </div>
+                  <div class="task-assignment" *ngIf="task.assignedTo">
+                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
+                  </div>
+                </div>
+                <div class="task-active-indicator" *ngIf="task.activeYN">
+                  <span class="active-badge">Active</span>
+                </div>
               </div>
             </div>
 
@@ -73,11 +103,27 @@
             <div class="task-column">
               <div class="task-card" *ngFor="let task of employee.tasks.done">
                 <div class="task-header">
-                  <span class="task-id">{{task.id}}</span>
-                  <span class="task-points" *ngIf="task.points">{{task.points}}pts</span>
+                  <span class="task-id">#{{task.taskId}}</span>
+                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
+                    {{task.taskStatus}}
+                  </span>
                 </div>
-                <div class="task-title">{{task.title}}</div>
-                <div class="task-project" [class]="task.project">{{task.projectName}}</div>
+                <div class="task-title">{{task.taskTitle}}</div>
+                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
+                <div class="task-meta">
+                  <div class="task-sprint" *ngIf="task.sprintId">
+                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
+                  </div>
+                  <div class="task-created">
+                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
+                  </div>
+                  <div class="task-assignment" *ngIf="task.assignedTo">
+                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
+                  </div>
+                </div>
+                <div class="task-active-indicator" *ngIf="task.activeYN">
+                  <span class="active-badge">Active</span>
+                </div>
               </div>
             </div>
           </div>

@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from 'src/app/shared/services/employee.service';
 import { TaskService } from 'src/app/shared/services/task.service';
 
+// Updated interfaces to match your actual data structure
 interface KanbanUser {
-  id: string;
-  name: string;
-  initials: string;
-  taskCount: string;
+  eid: number;
+  ename: string;
+  isAdmin?: boolean;
   isExpanded: boolean;
   tasks: {
     todo: KanbanTask[];
@@ -16,11 +16,15 @@ interface KanbanUser {
 }
 
 interface KanbanTask {
-  id: string;
-  title: string;
-  projectName: string;
-  project: 'design' | 'development';
-  points?: number;
+  taskId: number;
+  taskTitle: string;
+  taskDesc: string;
+  taskStatus: string;
+  activeYN: boolean;
+  assignedFrom: number;
+  assignedTo: number;
+  createdAt: string;
+  sprintId: number;
 }
 
 @Component({
@@ -46,6 +50,8 @@ export class KanbanComponent implements OnInit {
     this.checkLoggedInUser();
     this.getAllEmployees();
   }
+
+  
 
   // Check if user is logged in via localStorage
   checkLoggedInUser() {
@@ -111,7 +117,6 @@ export class KanbanComponent implements OnInit {
       // Add kanban-specific properties
       this.employees.forEach(employee => {
         employee.isExpanded = false;
-        employee.initials = this.getInitials(employee.name);
         employee.tasks = {
           todo: [],
           inProgress: [],
@@ -130,17 +135,20 @@ export class KanbanComponent implements OnInit {
     // Load tasks for the logged in user
     this.taskService.getTasksByEmployeeId(this.loggedInUserId).subscribe((tasks: any) => {
       if (tasks && this.loggedInEmployee) {
+        console.log('Tasks for logged in employee:', this.loggedInEmployee.ename, tasks);
         // Organize tasks by status
-        const todoTasks = tasks.filter((task: any) => task.status === 'todo');
-        const inProgressTasks = tasks.filter((task: any) => task.status === 'inProgress');
-        const doneTasks = tasks.filter((task: any) => task.status === 'done');
-
+        const todoTasks = tasks.filter((task: any) => task.taskStatus === 'TODO' || task.taskStatus === 'todo');
+        const inProgressTasks = tasks.filter((task: any) => task.taskStatus === 'IN PROGRESS');
+        const doneTasks = tasks.filter((task: any) => task.taskStatus === 'DONE');
+        
         // Update the employee's tasks
         this.employees[0].tasks = {
           todo: todoTasks,
           inProgress: inProgressTasks,
           done: doneTasks
         };
+
+        console.log(this.employees[0].tasks);
       }
     });
   }
@@ -150,7 +158,7 @@ export class KanbanComponent implements OnInit {
     return name.split(' ').map(word => word.charAt(0)).join('').toUpperCase();
   }
 
-  toggleExpand(user: KanbanUser): void {
+  toggleExpand(user: any): void {
     user.isExpanded = !user.isExpanded;
   }
 
