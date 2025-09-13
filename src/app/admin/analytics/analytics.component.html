@@ -1,0 +1,63 @@
+<div style="display: flex; flex-wrap: wrap; gap: 32px;">
+  <!-- Task Status Chart -->
+  <div style="flex: 1 1 300px;">
+    <h3>Task Status Distribution</h3>
+    <ngx-charts-pie-chart
+      [results]="taskStatusChartData"
+      [legend]="true"
+      [labels]="true"
+      [doughnut]="true"
+      [explodeSlices]="false"
+      [view]="[400, 300]">
+    </ngx-charts-pie-chart>
+  </div>
+
+  <!-- Tasks Per Employee Chart -->
+  <div style="flex: 1 1 300px;">
+    <h3>Tasks Per Employee</h3>
+    <ngx-charts-bar-vertical
+      [results]="tasksPerEmployeeChartData"
+      [legend]="false"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Employee'"
+      [yAxisLabel]="'Tasks'"
+      [view]="[400, 300]">
+    </ngx-charts-bar-vertical>
+  </div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; gap: 32px; margin-top: 32px;">
+  <!-- Task Durations Chart -->
+  <div style="flex: 1 1 300px;">
+    <h3>Task Durations (minutes)</h3>
+    <ngx-charts-bar-horizontal
+      [results]="taskDurationsChartData"
+      [legend]="false"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Duration (min)'"
+      [yAxisLabel]="'Task'"
+      [view]="[400, 300]">
+    </ngx-charts-bar-horizontal>
+  </div>
+
+  <!-- Tasks Per Date Chart -->
+  <div style="flex: 1 1 600px;">
+    <h3>Tasks Per Date (per Employee)</h3>
+    <ngx-charts-line-chart
+      [results]="tasksPerDateChartData"
+      [legend]="true"
+      [xAxis]="true"
+      [yAxis]="true"
+      [showXAxisLabel]="true"
+      [showYAxisLabel]="true"
+      [xAxisLabel]="'Date'"
+      [yAxisLabel]="'Tasks'">
+    </ngx-charts-line-chart>
+  </div>
+</div>

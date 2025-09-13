@@ -8,6 +8,7 @@ import { KanbanComponent } from './employee/kanban-component/kanban-component.co
 import { BacklogComponent } from './shared/backlog/backlog.component';
 import { LoginComponent } from './auth/login/login.component';
 import { DashboardComponent } from './shared/dashboard/dashboard.component';
+import { AnalyticsComponent } from './admin/analytics/analytics.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,10 @@ const routes: Routes = [
   {
     path:"dashboard",
     component:DashboardComponent
+  },
+  {
+    path:"analytics",
+    component:AnalyticsComponent
   }
 ];
 

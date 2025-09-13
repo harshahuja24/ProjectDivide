@@ -35,7 +35,7 @@ export class LoginComponent {
       const user = employees.find(emp => emp.email === formData.email && emp.password === formData.password);
       if (user) {
         console.log('Login successful:', user);
-        localStorage.setItem('loggedInUserId', user.id.toString());
+        localStorage.setItem('loggedInUserId', JSON.stringify(user.eid));
         // Redirect to dashboard or another page
         this.router.navigate(['']);
       } else {

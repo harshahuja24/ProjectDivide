@@ -32,4 +32,8 @@ export class TaskService {
     return this.httpClient.put("http://localhost:8080/tasks/updateStatus", task);
   }
 
+  getAllTasks(): Observable<any[]> {
+    return this.httpClient.get<any[]>("http://localhost:8080/tasks/all");
+  }
+
 }
