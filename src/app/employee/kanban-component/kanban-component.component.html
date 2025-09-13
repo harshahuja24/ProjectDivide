@@ -1,24 +1,13 @@
 <div class="kanban-container">
-  <!-- User Selection (for demonstration) -->
-  <div class="user-selector" *ngIf="showUserSelector">
-    <h3>Select User to Login:</h3>
-    <div class="user-list">
-      <button 
-        *ngFor="let emp of availableEmployees" 
-        (click)="setLoggedInUser(emp.eid)"
-        class="user-select-btn">
-        {{emp.ename}} (ID: {{emp.eid}})
-      </button>
-    </div>
-  </div>
+  
 
   <!-- Kanban Board (only visible when user is logged in) -->
-  <div *ngIf="loggedInUserId && !showUserSelector">
+  <div *ngIf="loggedInUserId ">
     <!-- Logged in user info -->
-    <div class="logged-in-user-info">
+    <!-- <div class="logged-in-user-info">
       <span>Logged in as: <strong>{{loggedInEmployee?.ename}}</strong></span>
       <button (click)="logout()" class="logout-btn">Logout</button>
-    </div>
+    </div> -->
 
     <!-- Column Headers -->
     <div class="kanban-headers">
@@ -27,108 +16,71 @@
       <div class="header">DONE ✓ {{employees[0]?.tasks?.done?.length || 0}}</div>
     </div>
 
-    <!-- User Groups -->
-    <div class="user-groups">
-      <div class="user-group" *ngFor="let employee of employees">
-        <!-- User Header -->
-        <div class="user-header" (click)="toggleExpand(employee)">
-          <div class="user-info">
-            <span class="expand-icon">{{ employee.isExpanded ? '▼' : '▶' }}</span>
-            <span class="user-name">{{employee.ename}}</span>
-            <span class="user-initials">{{getInitials(employee.ename)}}</span>
-            <span class="task-count">({{getTotalTaskCount(employee)}} tasks)</span>
-          </div>
+    <!-- Employee Groups -->
+  <div class="employee-groups">
+    <div class="employee-group" *ngFor="let employee of employees">
+      <!-- Employee Header -->
+      <div class="employee-header" (click)="toggleExpand(employee)">
+        <div class="employee-info">
+          <span class="expand-icon">{{ employee.isExpanded ? '▼' : '▶' }}</span>
+          <span class="employee-name">{{ employee.ename }}</span>
         </div>
+      </div>
 
-        <!-- Tasks Container -->
-        <div class="tasks-container" *ngIf="employee.isExpanded">
-          <div class="task-columns">
-            <!-- TO DO Column -->
-            <div class="task-column">
-              <div class="task-card" *ngFor="let task of employee.tasks.todo">
-                <div class="task-header">
-                  <span class="task-id">#{{task.taskId}}</span>
-                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
-                    {{task.taskStatus}}
-                  </span>
-                </div>
-                <div class="task-title">{{task.taskTitle}}</div>
-                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
-                <div class="task-meta">
-                  <div class="task-sprint" *ngIf="task.sprintId">
-                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
-                  </div>
-                  <div class="task-created">
-                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
-                  </div>
-                  <div class="task-assignment" *ngIf="task.assignedTo">
-                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
-                  </div>
-                </div>
-                <div class="task-active-indicator" *ngIf="task.activeYN">
-                  <span class="active-badge">Active</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- IN PROGRESS Column -->
-            <div class="task-column">
-              <div class="task-card" *ngFor="let task of employee.tasks.inProgress">
-                <div class="task-header">
-                  <span class="task-id">#{{task.taskId}}</span>
-                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
-                    {{task.taskStatus}}
-                  </span>
-                </div>
-                <div class="task-title">{{task.taskTitle}}</div>
-                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
-                <div class="task-meta">
-                  <div class="task-sprint" *ngIf="task.sprintId">
-                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
-                  </div>
-                  <div class="task-created">
-                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
-                  </div>
-                  <div class="task-assignment" *ngIf="task.assignedTo">
-                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
-                  </div>
-                </div>
-                <div class="task-active-indicator" *ngIf="task.activeYN">
-                  <span class="active-badge">Active</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- DONE Column -->
-            <div class="task-column">
-              <div class="task-card" *ngFor="let task of employee.tasks.done">
-                <div class="task-header">
-                  <span class="task-id">#{{task.taskId}}</span>
-                  <span class="task-status" [class]="'status-' + task.taskStatus.toLowerCase()">
-                    {{task.taskStatus}}
-                  </span>
-                </div>
-                <div class="task-title">{{task.taskTitle}}</div>
-                <div class="task-description" *ngIf="task.taskDesc">{{task.taskDesc}}</div>
-                <div class="task-meta">
-                  <div class="task-sprint" *ngIf="task.sprintId">
-                    <span class="meta-label">Sprint:</span> {{task.sprintId}}
-                  </div>
-                  <div class="task-created">
-                    <span class="meta-label">Created:</span> {{task.createdAt | date:'MMM dd, yyyy'}}
-                  </div>
-                  <div class="task-assignment" *ngIf="task.assignedTo">
-                    <span class="meta-label">Assigned to:</span> {{task.assignedTo}}
-                  </div>
-                </div>
-                <div class="task-active-indicator" *ngIf="task.activeYN">
-                  <span class="active-badge">Active</span>
-                </div>
+      <!-- Tasks Container (shown if expanded) -->
+      <div class="tasks-container" *ngIf="employee.isExpanded" >
+        <div class="kanban-columns" cdkDropListGroup>
+          <!-- Todo Column -->
+          <div  cdkDropList
+            [cdkDropListData]="employee.tasks.todo"
+            class="example-list"
+            (cdkDropListDropped)="drop($event, 'TODO')" class="column" >
+            <div class="task-card" *ngFor="let task of employee.tasks.todo" cdkDrag>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
+              <div class="task-title">{{ task.taskTitle }}</div>
+              <div class="task-desc" [innerHTML]="task.taskDesc"  *ngIf="task.taskDesc">{{ task.taskDesc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
               </div>
             </div>
           </div>
+
+          <!-- In Progress Column -->
+          <div cdkDropList
+            [cdkDropListData]="employee.tasks.inProgress"
+            class="example-list"
+            (cdkDropListDropped)="drop($event, 'IN PROGRESS')"  class="column">
+            <div class="task-card in-progress" *ngFor="let task of employee.tasks.inProgress" cdkDrag>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
+              <div class="task-title">{{ task.taskTitle }}</div>
+              <div class="task-desc" [innerHTML]="task.taskDesc" *ngIf="task.taskDesc">{{ task.taskDesc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
+              </div>
+            </div>
+          </div>
+
+          <!-- Done Column -->
+          <div   cdkDropList
+            [cdkDropListData]="employee.tasks.done"
+            class="example-list"
+            (cdkDropListDropped)="drop($event,'DONE')" class="column">
+            <div class="task-card done" *ngFor="let task of employee.tasks.done" cdkDrag>
+              <!-- <div class="task-id">{{ task.id }}</div> -->
+              <div class="task-title">{{ task.taskTitle }}</div>
+              <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
+              <div class="task-created" *ngIf="task.createdAt">
+                <i class="far fa-clock"></i>
+                {{ task.createdAt | date:'mediumDate' }}
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
+  </div>
   </div>
 </div>

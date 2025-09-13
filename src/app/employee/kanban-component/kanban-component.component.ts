@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from 'src/app/shared/services/employee.service';
 import { TaskService } from 'src/app/shared/services/task.service';
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 
 // Updated interfaces to match your actual data structure
 interface KanbanUser {
@@ -49,8 +50,40 @@ export class KanbanComponent implements OnInit {
   ngOnInit() {
     this.checkLoggedInUser();
     this.getAllEmployees();
+
   }
 
+   drop(event: CdkDragDrop<any[]>, status: string) {
+  
+     
+      if (event.previousContainer === event.container) {
+        moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      } else {
+        transferArrayItem(
+          event.previousContainer.data,
+          event.container.data,
+          event.previousIndex,
+          event.currentIndex,
+        );
+      }
+  
+      console.log('Drop event:', event);
+      console.log('Previous Container:', event.previousContainer);
+      console.log('Current Container:', event.container);
+      console.log("status",status);
+  
+      event.container.data[0].taskStatus = status;
+  
+      this.taskService.updateTaskStatus(event.container.data[0]).subscribe(()=>{
+        console.log("Task status updated successfully");
+      });
+      console.log('Updated task status:', event.container.data[0].taskStatus);
+      console.log('Updated task:', event.container.data[0]);
+      console.log("Task Updated Successfully");
+  
+  
+    }
+  
   
 
   // Check if user is logged in via localStorage
@@ -64,25 +97,6 @@ export class KanbanComponent implements OnInit {
       // Show user selector for demonstration
       this.showUserSelector = true;
     }
-  }
-
-  // Set logged in user (for demonstration purposes)
-  setLoggedInUser(employeeId: number) {
-    this.loggedInUserId = employeeId;
-    localStorage.setItem('loggedInUserId', employeeId.toString());
-    console.log('Logged in user set:', employeeId);
-    this.showUserSelector = false;
-    this.filterEmployeeData();
-  }
-
-  // Logout user
-  logout() {
-    localStorage.removeItem('loggedInUserId');
-    this.loggedInUserId = null;
-    this.loggedInEmployee = null;
-    this.employees = [];
-    this.showUserSelector = true;
-    console.log('User logged out');
   }
 
   getAllEmployees() {
