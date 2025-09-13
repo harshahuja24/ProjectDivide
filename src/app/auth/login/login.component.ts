@@ -36,10 +36,7 @@ export class LoginComponent {
       if (user) {
         console.log('Login successful:', user);
         localStorage.setItem('loggedInUserId', JSON.stringify(user.eid));
-<<<<<<< HEAD
-=======
         localStorage.setItem('isAdmin', JSON.stringify(user.isAdmin));
->>>>>>> 8e2525f88faccf7d6ab7f972533af4e002b32cf1
         // Redirect to dashboard or another page
         this.router.navigate(['']);
       } else {
