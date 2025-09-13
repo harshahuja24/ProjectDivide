@@ -75,6 +75,7 @@ export class ViewAllKanbanComponent implements OnInit {
   getAllEmployeesAndTasks() {
     this.employeeService.getAllEmployees().subscribe((data: any[]) => {
       this.employees = data || [];
+      console.log('Fetched employees:', this.employees);
       this.kanbanEmployees = [];
       this.employees.forEach(emp => {
         this.taskService.getActiveSprintTasksByEmployee(emp.eid).subscribe((tasks: any[]) => {
