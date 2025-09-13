@@ -35,7 +35,8 @@ export class CreateEmployeeComponent {
     let backendVal:any = {};
     backendVal = {
       "ename": this.employeeRegistration.value.ename,
-      "isAdmin":this.employeeRegistration.value.isAdmin
+      "isAdmin":this.employeeRegistration.value.isAdmin,
+      "email": this.employeeRegistration.value.email
     }
   this.employeeService.createEmployee(backendVal).subscribe({
     next: (res: any) => {
@@ -67,7 +68,8 @@ export class CreateEmployeeComponent {
       this.employeesList = e.map((employee: any) => {
         return {
           ename: employee.ename,
-          isAdmin: employee.isAdmin
+          isAdmin: employee.isAdmin,
+
         };
       });
 
