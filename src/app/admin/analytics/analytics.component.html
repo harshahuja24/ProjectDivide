@@ -32,7 +32,7 @@
 <div style="display: flex; flex-wrap: wrap; gap: 32px; margin-top: 32px;">
   <!-- Task Durations Chart -->
   <div style="flex: 1 1 300px;">
-    <h3>Task Durations (minutes)</h3>
+    <h3>Task Durations</h3>
     <ngx-charts-bar-horizontal
       [results]="taskDurationsChartData"
       [legend]="false"
@@ -40,7 +40,7 @@
       [yAxis]="true"
       [showXAxisLabel]="true"
       [showYAxisLabel]="true"
-      [xAxisLabel]="'Duration (min)'"
+      [xAxisLabel]="'Duration Days'"
       [yAxisLabel]="'Task'"
       [view]="[400, 300]">
     </ngx-charts-bar-horizontal>

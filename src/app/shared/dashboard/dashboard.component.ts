@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { EmployeeService } from '../services/employee.service';
 import { TaskService } from '../services/task.service';
 import { Route, Router } from '@angular/router';
+import { local } from 'd3-selection';
 
 interface KanbanUser {
   eid: number;
@@ -41,8 +42,10 @@ interface Employee {
 })
 export class DashboardComponent implements OnInit {
   
+  //can you refresh the page after login to see the dash board
   // Authentication properties
-  loggedInUserId: number | null = null;
+  loggedInUserId: number | null = localStorage.getItem('loggedInUserId') ? parseInt(localStorage.getItem('loggedInUserId')!, 10) : null;
+  isLoggedIn: boolean = this.loggedInUserId !== null;
   loggedInEmployee: Employee | null = null;
   availableEmployees: Employee[] = [];
   isAdminFlag: boolean = false;
@@ -236,7 +239,12 @@ export class DashboardComponent implements OnInit {
 
   // Logout function
   logout() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/login']).then(() => {
+      window.location.reload();
+    });
+    localStorage.clear();
+              
+
     // localStorage.removeItem('loggedInUserId');
     // this.loggedInUserId = null;
     // this.loggedInEmployee = null;

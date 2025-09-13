@@ -1,4 +1,4 @@
-<div class="side-panel" [class.collapsed]="isCollapsed">
+<div class="side-panel" [class.collapsed]="isCollapsed" *ngIf="loggedInUserId">
     <div class="project-header">
       <div class="project-icon">
         <img src="assets/project-icon.png" alt="Project">
@@ -19,19 +19,11 @@
         <nav>
           <a  routerLinkActive="active">
             <i class="fas fa-home"></i>
-            <span *ngIf="!isCollapsed">Overview</span>
+            <span *ngIf="!isCollapsed" (click)="this.router.navigate(['/'])">DashBoard</span>
           </a>
           <a  routerLinkActive="active">
             <i class="fas fa-users"></i>
-            <span *ngIf="!isCollapsed">Employee Management</span>
-          </a>
-          <a  routerLinkActive="active">
-            <i class="fas fa-project-diagram"></i>
-            <span *ngIf="!isCollapsed">Projects</span>
-          </a>
-          <a  routerLinkActive="active">
-            <i class="fas fa-tasks"></i>
-            <span *ngIf="!isCollapsed">Task Management</span>
+            <span *ngIf="!isCollapsed && isAdmin" (click)="this.router.navigate(['/create-employee'])">Employee Management</span>
           </a>
         </nav>
       </div>
@@ -42,15 +34,15 @@
         <nav>
           <a  routerLinkActive="active">
             <i class="fas fa-list"></i>
-            <span *ngIf="!isCollapsed">Backlog</span>
+            <span *ngIf="!isCollapsed" (click)="this.router.navigate(['/backlog'])">Create Sprints</span>
           </a>
           <a  routerLinkActive="active">
             <i class="fas fa-columns"></i>
-            <span *ngIf="!isCollapsed">Kanban Board</span>
+            <span *ngIf="!isCollapsed" (click)="this.router.navigate(['/my-kanban'])">My Kanban</span>
           </a>
           <a  routerLinkActive="active">
             <i class="fas fa-user-check"></i>
-            <span *ngIf="!isCollapsed">My Tasks</span>
+            <span *ngIf="!isCollapsed" (click)="this.router.navigate(['/view-all-kanban'])">View All Kanban Boards</span>
           </a>
         </nav>
       </div>
@@ -61,7 +53,7 @@
         <nav>
           <a routerLinkActive="active">
             <i class="fas fa-chart-line"></i>
-            <span *ngIf="!isCollapsed">Logs & Reports</span>
+            <span *ngIf="!isCollapsed" (click)="this.router.navigate(['/analytics'])">Logs & Reports</span>
           </a>
         </nav>
       </div>

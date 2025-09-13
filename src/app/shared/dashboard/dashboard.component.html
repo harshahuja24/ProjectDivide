@@ -1,5 +1,5 @@
 <!-- dashboard.component.html -->
-<div class="kanban-container">
+<div class="kanban-container" *ngIf="isLoggedIn">
 
   <!-- User Selection Section (shown when no user is logged in) -->
   <div class="user-selector" *ngIf="showUserSelector">

@@ -38,7 +38,10 @@ export class LoginComponent {
         localStorage.setItem('loggedInUserId', JSON.stringify(user.eid));
         localStorage.setItem('isAdmin', JSON.stringify(user.isAdmin));
         // Redirect to dashboard or another page
-        this.router.navigate(['']);
+        this.router.navigate(['/dashboard']).then(() => {
+          window.location.reload();
+        });
+
       } else {
         console.log('Invalid email or password');
       }

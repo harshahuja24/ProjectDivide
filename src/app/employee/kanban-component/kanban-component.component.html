@@ -70,7 +70,7 @@
             <div class="task-card done" *ngFor="let task of employee.tasks.done" cdkDrag>
               <!-- <div class="task-id">{{ task.id }}</div> -->
               <div class="task-title">{{ task.taskTitle }}</div>
-              <div class="task-desc" [innerHTML]="task.desc"  *ngIf="task.desc">{{ task.desc }}</div>
+              <div class="task-desc" [innerHTML]="task.taskDesc"  *ngIf="task.taskDesc">{{ task.taskDesc }}</div>
               <div class="task-created" *ngIf="task.createdAt">
                 <i class="far fa-clock"></i>
                 {{ task.createdAt | date:'mediumDate' }}

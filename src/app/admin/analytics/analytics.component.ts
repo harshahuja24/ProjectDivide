@@ -91,7 +91,7 @@ export class AnalyticsComponent {
       .filter(task => task.startedAt && task.completedAt)
       .map(task => ({
         name: task.taskTitle,
-        value: (new Date(task.completedAt).getTime() - new Date(task.startedAt).getTime()) / (1000 * 60), // duration in minutes
+        value: (new Date(task.completedAt).getTime() - new Date(task.startedAt).getTime()) / (1000 * 1440), // duration in minutes
         assignedTo: task.assignedToName
       }));
   }
@@ -101,7 +101,7 @@ export class AnalyticsComponent {
     combinedData.forEach(task => {
       const employee = task.assignedToName;
       // Use startedAt or createdAt as the date
-      const date = (task.startedAt || task.createdAt) ? new Date(task.startedAt || task.createdAt).toISOString().split('T')[0] : 'Unknown';
+      const date = (task.startedAt) ? new Date(task.createdAt).toISOString().split('T')[0] : 'Unknown';
       if (!tasksByEmployeeAndDate[employee]) tasksByEmployeeAndDate[employee] = {};
       if (!tasksByEmployeeAndDate[employee][date]) tasksByEmployeeAndDate[employee][date] = 0;
       tasksByEmployeeAndDate[employee][date]++;
